@@ -349,10 +349,10 @@ function NotificationsContent({ onClose }: { onClose?: () => void }) {
       <div className="flex flex-col w-full overflow-hidden">
         <div className="shrink-0 flex items-center justify-between border-b border-border px-4 py-3">
           <div>
-            <p className="font-satoshi tracking-widest text-sm uppercase font-semibold text-black">
+            <p className="font-satoshi tracking-widest text-sm uppercase font-bold text-black">
               Notifications
             </p>
-            <p className="font-satoshi tracking-widest text-sm text-muted-foreground">
+            <p className="font-satoshi tracking-widest text-sm font-semibold text-muted-foreground">
               {unreadCount} unread
             </p>
           </div>
@@ -361,9 +361,10 @@ function NotificationsContent({ onClose }: { onClose?: () => void }) {
               variant="ghost"
               size="sm"
               onClick={markAllRead}
-              className="font-satoshi tracking-widest text-sm hover:text-foreground bg-sidebar-primary text-white font-normal"
+              className="font-satoshi tracking-widest text-sm hover:text-foreground bg-sidebar-primary text-white font-semibold"
             >
-              <Check className="mr-1 h-3 w-3" /> Mark all read
+              <Check strokeWidth={3} className="mr-1 h-3 w-3 font-bold" /> Mark
+              all read
             </Button>
           )}
         </div>
@@ -385,17 +386,17 @@ function NotificationsContent({ onClose }: { onClose?: () => void }) {
                 </div>
                 <div className="flex-1 space-y-0.5">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-satoshi text-sm font-medium leading-tight text-black tracking-widest">
+                    <p className="font-satoshi text-sm font-bold leading-tight text-black tracking-widest">
                       {n.title}
                     </p>
                     {n.unread && (
                       <span className="h-2 w-2 shrink-0 rounded-full bg-sidebar-primary" />
                     )}
                   </div>
-                  <p className="font-satoshi text-sm text-muted-foreground leading-snug">
+                  <p className="font-satoshi text-sm font-semibold text-muted-foreground leading-snug">
                     {n.body}
                   </p>
-                  <p className="font-satoshi text-xs text-muted-foreground/70">
+                  <p className="font-satoshi text-xs font-semibold text-muted-foreground/70">
                     {n.time}
                   </p>
                 </div>
@@ -409,7 +410,7 @@ function NotificationsContent({ onClose }: { onClose?: () => void }) {
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="w-full font-satoshi text-xs text-muted-foreground"
+            className="w-full font-satoshi text-sm font-bold tracking-widest text-muted-foreground"
           >
             View all notifications
           </Button>
@@ -466,10 +467,10 @@ function SettingsContent() {
   return (
     <>
       <SheetHeader className="border-b border-border px-6 py-5">
-        <SheetTitle className="font-satoshi text-lg font-medium tracking-wide uppercase text-black">
+        <SheetTitle className="font-satoshi text-lg font-bold tracking-wide uppercase text-black">
           Settings
         </SheetTitle>
-        <p className="font-satoshi text-sm text-muted-foreground tracking-wide">
+        <p className="font-satoshi text-sm font-semibold text-muted-foreground tracking-wide">
           Personalize your ecosystem
         </p>
       </SheetHeader>
@@ -490,10 +491,10 @@ function SettingsContent() {
                 key={item.label}
                 className="rounded-xl border border-border bg-muted/30 px-3 py-2.5"
               >
-                <p className="font-satoshi text-sm tracking-widest text-muted-foreground">
+                <p className="font-satoshi text-sm font-semibold tracking-widest text-muted-foreground">
                   {item.label}
                 </p>
-                <p className="font-satoshi text-sm font-medium mt-0.5">
+                <p className="font-satoshi text-sm font-semibold mt-0.5">
                   {item.value}
                 </p>
               </div>
@@ -502,14 +503,14 @@ function SettingsContent() {
           <Button
             variant="outline"
             size="sm"
-            className="w-full font-satoshi text-sm rounded-xl tracking-widest text-white"
+            className="w-full font-satoshi text-sm font-semibold rounded-xl tracking-widest text-white"
           >
             Edit Profile
           </Button>
         </div>
         {/* Ritual Timing */}
         <div className="px-6 py-5 space-y-3">
-          <p className="font-satoshi text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+          <p className="font-satoshi text-sm font-bold uppercase tracking-widest text-muted-foreground">
             Ritual Timing
           </p>
           <div className="space-y-2">
@@ -520,7 +521,7 @@ function SettingsContent() {
             ].map((t) => (
               <div
                 key={t.label}
-                className="flex items-center font-satoshi text-black justify-between rounded-xl border border-border px-3 py-2.5"
+                className="flex items-center font-satoshi font-semibold text-black justify-between rounded-xl border border-border px-3 py-2.5"
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm">{t.icon}</span>
@@ -538,7 +539,7 @@ function SettingsContent() {
         </div>
         {/* Notifications */}
         <div className="px-6 py-5 space-y-3">
-          <p className="font-satoshi text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+          <p className="font-satoshi text-sm font-bold uppercase tracking-widest text-muted-foreground">
             Notifications
           </p>
           <div className="space-y-2.5">
@@ -550,7 +551,7 @@ function SettingsContent() {
                 >
                   <Label
                     htmlFor={`notif-${key}`}
-                    className="font-satoshi text-sm capitalize cursor-pointer tracking-widest font-normal"
+                    className="font-satoshi text-sm font-semibold capitalize cursor-pointer tracking-widest"
                   >
                     {key === "insights" ? "AI Insights" : key}
                   </Label>
@@ -568,7 +569,7 @@ function SettingsContent() {
         </div>
         {/* Appearance */}
         <div className="px-6 py-5 space-y-3">
-          <p className="font-satoshi text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+          <p className="font-satoshi text-sm font-bold uppercase tracking-widest text-muted-foreground">
             Appearance
           </p>
           <div className="flex gap-2 text-white">
@@ -577,7 +578,7 @@ function SettingsContent() {
                 key={mode}
                 variant={mode === "System" ? "default" : "outline"}
                 size="sm"
-                className="flex-1 font-satoshi text-sm rounded-xl tracking-widest"
+                className="flex-1 font-satoshi font-semibold text-sm rounded-xl tracking-widest"
               >
                 {mode}
               </Button>
@@ -586,20 +587,20 @@ function SettingsContent() {
         </div>
         {/* Integrations */}
         <div className="px-6 py-5 space-y-3">
-          <p className="font-satoshi text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+          <p className="font-satoshi text-sm font-bold uppercase tracking-widest text-muted-foreground">
             Integrations
           </p>
           <div className="flex items-center justify-between rounded-xl border border-border px-3 py-2.5">
             <div className="flex items-center gap-2">
               <SmartphoneNfc className="h-4 w-4 text-muted-foreground" />
-              <span className="font-satoshi text-sm text-black tracking-widest">
+              <span className="font-satoshi text-sm text-black font-semibold tracking-widest">
                 Apple Health
               </span>
             </div>
             <Button
               variant="outline"
               size="sm"
-              className="font-satoshi text-sm rounded-lg h-7 font-semibold text-white"
+              className="font-satoshi text-sm rounded-lg h-7 font-bold text-white"
             >
               Connect
             </Button>
@@ -607,21 +608,21 @@ function SettingsContent() {
         </div>
         {/* Data Management */}
         <div className="px-6 py-5 space-y-2">
-          <p className="font-satoshi text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+          <p className="font-satoshi text-sm font-bold uppercase tracking-widest text-muted-foreground">
             Data Management
           </p>
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
-              className="flex-1 font-satoshi text-sm rounded-xl gap-1.5 text-white"
+              className="flex-1 font-satoshi font-semibold text-sm rounded-xl gap-1.5 text-white"
             >
               <Download className="h-3 w-3" /> Export PDF
             </Button>
             <Button
               variant="outline"
               size="sm"
-              className="flex-1 font-satoshi text-sm rounded-xl gap-1.5 text-white"
+              className="flex-1 font-satoshi text-sm font-semibold rounded-xl gap-1.5 text-white"
             >
               <Download className="h-3 w-3" /> Export CSV
             </Button>
