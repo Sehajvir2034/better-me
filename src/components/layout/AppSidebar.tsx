@@ -13,6 +13,7 @@ import {
   Dumbbell,
   BookHeart,
   TrendingUp,
+  X,
 } from "lucide-react";
 
 import {
@@ -20,6 +21,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  useSidebar,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
@@ -28,6 +30,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 const PRIMARY_NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -44,21 +47,36 @@ const PRIMARY_NAV = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { toggleSidebar } = useSidebar();
 
   return (
     <Sidebar collapsible="offcanvas" variant="sidebar">
       {/* ── Header ─────────────────────────────────────────── */}
       <SidebarHeader className="px-4 py-5">
-        <span className="text-2xl font-satoshi uppercase font-medium tracking-widest group-data-[collapsible=icon]:hidden">
-          Better US
-        </span>
-        <p className="text-xs font-satoshi uppercase text-muted-foreground font-medium tracking-widest">
-          Health Tracker
-        </p>
-        {/* Icon shown when collapsed */}
-        <span className="hidden text-lg font-bold group-data-[collapsible=icon]:block">
-          BU
-        </span>
+        <div className="flex items-start justify-between">
+          <div>
+            <span className="text-2xl font-satoshi uppercase font-medium tracking-widest group-data-[collapsible=icon]:hidden">
+              Better Us
+            </span>
+            <p className="text-xs font-satoshi uppercase text-muted-foreground font-medium tracking-widest">
+              Health Tracker
+            </p>
+            {/* Icon shown when collapsed */}
+            <span className="hidden text-lg font-bold group-data-[collapsible=icon]:block">
+              BU
+            </span>
+          </div>
+          {/* ── Close button ───────────────────────────────── */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 rounded-full group-data-[collapsible=icon]:hidden"
+            onClick={toggleSidebar}
+            aria-label="Close sidebar"
+          >
+            <X className="size-4" />
+          </Button>
+        </div>
       </SidebarHeader>
 
       {/* ── Main nav ───────────────────────────────────────── */}

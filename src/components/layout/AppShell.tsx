@@ -33,19 +33,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Main content */}
         <div className="flex flex-1 flex-col overflow-hidden">
-          {/* Top bar — only shows SidebarTrigger (hamburger) on mobile */}
-          <header className="flex items-center h-12 px-4 border-b md:hidden shrink-0">
-            <SidebarTrigger />
-            <span className="ml-3 font-satoshi uppercase font-semibold tracking-widest text-sm">
-              Better US
-            </span>
-          </header>
-
           {/* Page content */}
-          <main
-            className="flex-1 overflow-y-auto overscroll-contain
-                           px-4 pt-4 pb-24 md:px-6 md:pt-6 md:pb-6"
-          >
+          <main className="flex-1 overflow-y-auto overscroll-contain px-4 pt-4 pb-24 md:px-6 md:pt-6 md:pb-6">
             {children}
           </main>
         </div>

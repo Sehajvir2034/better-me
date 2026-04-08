@@ -25,8 +25,10 @@ import {
   SmartphoneNfc,
   Clock,
   Check,
+  Menu,
 } from "lucide-react";
 
+import { useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -314,11 +316,11 @@ function SearchDialog() {
       <Button
         variant="outline"
         onClick={() => setOpen(true)}
-        className="relative h-9 w-64 justify-start gap-2 rounded-xl border-border bg-muted/40 px-3 text-sm text-muted-foreground hover:bg-muted"
+        className="relative cursor-pointer h-9 w-64 justify-start gap-2 rounded-full border-border bg-white px-3 text-sm text-black hover:text-black hover:pointer"
       >
         <Search className="h-4 w-4 shrink-0" />
-        <span className="font-satoshi">Search entries...</span>
-        <kbd className="pointer-events-none ml-auto hidden select-none items-center gap-1 rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] sm:flex">
+        <span className="font-satoshi tracking-widest">Search here...</span>
+        <kbd className="pointer-events-none ml-auto hidden select-none items-center gap-1 rounded border border-border bg-background px-1.5 py-0.5 font-satoshi text-white text-xs sm:flex ">
           ⌘K
         </kbd>
       </Button>
@@ -347,7 +349,7 @@ function MobileSearch() {
         className="h-9 w-9 rounded-xl"
         onClick={() => setOpen(true)}
       >
-        <Search className="h-4 w-4" />
+        <Search className="size-5" />
         <span className="sr-only">Search</span>
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -458,11 +460,11 @@ function NotificationsPopover() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative h-9 w-9 rounded-xl"
+          className="relative h-9 w-9 rounded-full hover:bg-orange-400 data-[state=open]:bg-orange-400 cursor-pointer"
         >
-          <Bell className="h-4 w-4" />
+          <Bell className="size-5" />
           {unreadCount > 0 && (
-            <Badge className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-sidebar-primary p-0 text-[10px] text-sidebar-primary-foreground">
+            <Badge className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-sidebar-primary p-0 text-xs text-white">
               {unreadCount}
             </Badge>
           )}
@@ -666,8 +668,12 @@ function SettingsSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl">
-          <Settings className="h-4 w-4" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9 rounded-full hover:bg-orange-400 data-[state=open]:bg-orange-400 cursor-pointer"
+        >
+          <Settings className="size-5" />
           <span className="sr-only">Settings</span>
         </Button>
       </SheetTrigger>
@@ -692,16 +698,16 @@ function ProfileDropdown() {
           <Button
             variant="ghost"
             size="icon"
-            className="relative h-9 w-9 rounded-xl p-0"
+            className="relative h-9 w-9 rounded-full p-0"
           >
-            <Avatar className="h-8 w-8 rounded-xl">
+            <Avatar className="h-8 w-8 rounded-full">
               <AvatarImage src="/avatar.jpg" alt="Profile" />
-              <AvatarFallback className="rounded-xl bg-sidebar-primary text-sidebar-primary-foreground font-satoshi text-xs font-semibold">
+              <AvatarFallback className="rounded-full bg-sidebar-primary text-sidebar-primary-foreground font-satoshi text-sm font-bold">
                 AL
               </AvatarFallback>
             </Avatar>
             {unreadCount > 0 && (
-              <Badge className="absolute -right-1 -top-1 flex h-4 w-4 sm:hidden items-center justify-center rounded-full bg-sidebar-primary p-0 text-[10px] text-sidebar-primary-foreground">
+              <Badge className="absolute -right-1 -top-1 flex h-4 w-4 sm:hidden items-center justify-center rounded-full bg-sidebar-primary p-0 text-xs text-sidebar-primary-foreground">
                 {unreadCount}
               </Badge>
             )}
@@ -835,6 +841,7 @@ function ProfileDropdown() {
 // ─── Top Bar ──────────────────────────────────────────────────────────────────
 
 export function TopBar() {
+  const { toggleSidebar } = useSidebar();
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -842,37 +849,49 @@ export function TopBar() {
     day: "numeric",
   });
   const todayShort = new Date().toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
+    weekday: "long",
+    year: "numeric",
+    month: "long",
     day: "numeric",
   });
 
   return (
-    <header className="sticky top-0 z-50 flex h-14 items-center justify-between gap-2 border-b border-border bg-background/80 px-3 backdrop-blur-sm sm:h-16 sm:px-6">
-      {/* Left — Title */}
-      <div className="flex flex-col justify-center min-w-0">
-        <h1 className="font-cormorant text-base font-medium tracking-wide leading-tight sm:text-xl truncate">
-          Daily Command Center
-        </h1>
-        <p className="font-satoshi text-[10px] uppercase tracking-widest text-muted-foreground sm:hidden">
-          {todayShort}
-        </p>
-        <p className="hidden font-satoshi text-xs uppercase tracking-widest text-muted-foreground sm:block">
-          {today}
-        </p>
+    <header className="sticky top-0 z-50 flex h-14 items-center border-b border-border bg-background/80 px-3 backdrop-blur-sm sm:h-16 sm:px-6">
+      {/* ── LEFT: Menu toggle + Title ── */}
+      <div className="flex items-center gap-2 min-w-0 flex-1">
+        {" "}
+        {/* ← flex-1 here */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9 shrink-0 rounded-full hover:bg-orange-400 cursor-pointer"
+          onClick={toggleSidebar}
+          aria-label="Toggle sidebar"
+        >
+          <Menu className="size-5" />
+        </Button>
+        <div className="flex flex-col justify-center min-w-0">
+          <h1 className="font-satoshi uppercase text-lg sm:text-2xl font-medium tracking-wide leading-tight truncate">
+            Daily Command Center
+          </h1>
+          <p className="font-satoshi text-xs uppercase tracking-widest text-muted-foreground sm:hidden">
+            {todayShort}
+          </p>
+          <p className="hidden font-satoshi text-xs uppercase tracking-widest text-muted-foreground sm:block">
+            {today}
+          </p>
+        </div>
       </div>
 
-      {/* Right */}
+      {/* ── RIGHT: Search, Notifications, Settings, Profile ── */}
       <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
-        {/* Search */}
-        <div className="lg:hidden ">
+        <div className="lg:hidden">
           <MobileSearch />
         </div>
         <div className="hidden lg:block">
           <SearchDialog />
         </div>
 
-        {/* Notifications + Settings — desktop only */}
         <div className="hidden sm:flex sm:items-center sm:gap-1">
           <Separator orientation="vertical" className="mx-1" />
           <NotificationsPopover />
