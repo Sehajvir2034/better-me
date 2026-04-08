@@ -159,6 +159,33 @@ const NOTIFICATIONS = [
     time: "Yesterday",
     unread: false,
   },
+  {
+    id: 10,
+    type: "insight",
+    icon: TrendingUp,
+    title: "New Vitality Insight",
+    body: "Your recovery score is optimal today.",
+    time: "Yesterday",
+    unread: false,
+  },
+  {
+    id: 11,
+    type: "insight",
+    icon: TrendingUp,
+    title: "New Vitality Insight",
+    body: "Your recovery score is optimal today.",
+    time: "Yesterday",
+    unread: false,
+  },
+  {
+    id: 12,
+    type: "insight",
+    icon: TrendingUp,
+    title: "New Vitality Insight",
+    body: "Your recovery score is optimal today.",
+    time: "Yesterday",
+    unread: false,
+  },
 ];
 
 const SEARCH_QUICK_ACTIONS = [
@@ -644,7 +671,7 @@ function SettingsSheet() {
           <span className="sr-only">Settings</span>
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[420px] overflow-y-auto p-0 sm:max-w-[420px]">
+      <SheetContent className="w-105 overflow-y-auto p-0 sm:max-w-105">
         <SettingsContent />
       </SheetContent>
     </Sheet>
@@ -838,21 +865,21 @@ export function TopBar() {
       {/* Right */}
       <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
         {/* Search */}
-        <div className="sm:hidden">
+        <div className="lg:hidden ">
           <MobileSearch />
         </div>
-        <div className="hidden sm:block">
+        <div className="hidden lg:block">
           <SearchDialog />
         </div>
 
         {/* Notifications + Settings — desktop only */}
         <div className="hidden sm:flex sm:items-center sm:gap-1">
-          <Separator orientation="vertical" className="mx-1 h-5" />
+          <Separator orientation="vertical" className="mx-1" />
           <NotificationsPopover />
           <SettingsSheet />
         </div>
 
-        <Separator orientation="vertical" className="mx-1 h-5" />
+        <Separator orientation="vertical" className="mx-1" />
         <ProfileDropdown />
       </div>
     </header>
