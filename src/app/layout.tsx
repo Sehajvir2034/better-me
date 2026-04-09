@@ -37,19 +37,19 @@ export default function RootLayout({
     // <html lang="en" className={satoshi.variable} suppressHydrationWarning>
     //   <body>
     //     <TooltipProvider delayDuration={0}>
-    //       <AppShell>{children}</AppShell>
+    //       <AppShell>
+    //         <div className="flex flex-1 flex-col overflow-hidden">
+    //           <TopBar />
+    //           <main className="flex-1 overflow-y-auto p-6">{children}</main>
+    //         </div>
+    //       </AppShell>
     //     </TooltipProvider>
     //   </body>
     // </html>
     <html lang="en" className={satoshi.variable} suppressHydrationWarning>
       <body>
         <TooltipProvider delayDuration={0}>
-          <AppShell>
-            <div className="flex flex-1 flex-col overflow-hidden">
-              <TopBar />
-              <main className="flex-1 overflow-y-auto p-6">{children}</main>
-            </div>
-          </AppShell>
+          <AppShell>{children}</AppShell> {/* ← just pass children directly */}
         </TooltipProvider>
       </body>
     </html>

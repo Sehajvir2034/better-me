@@ -13,6 +13,7 @@ import {
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { cn } from "@/lib/utils";
+import { TopBar } from "./TopBar";
 
 const BOTTOM_TABS = [
   { href: "/dashboard", label: "Home", icon: LayoutDashboard },
@@ -33,6 +34,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Main content */}
         <div className="flex flex-1 flex-col overflow-hidden">
+          <TopBar />
           {/* Page content */}
           <main className="flex-1 overflow-y-auto overscroll-contain px-4 pt-4 pb-24 md:px-6 md:pt-6 md:pb-6">
             {children}
