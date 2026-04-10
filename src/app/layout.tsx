@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import localFont from "next/font/local";
+import { AppPointer } from "@/components/layout/AppPointer";
 
 const satoshi = localFont({
   src: [
@@ -31,7 +32,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={satoshi.variable} suppressHydrationWarning>
       <body>
-        <TooltipProvider delayDuration={0}>{children}</TooltipProvider>
+        <TooltipProvider delayDuration={0}>
+          <AppPointer>{children}</AppPointer>
+        </TooltipProvider>
       </body>
     </html>
   );
