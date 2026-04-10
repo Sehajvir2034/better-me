@@ -10,14 +10,6 @@ import {
 
 import { cn } from "@/lib/utils";
 
-/**
- * A custom pointer component that displays an animated cursor.
- * Add this as a child to any component to enable a custom pointer when hovering.
- * You can pass custom children to render as the pointer.
- *
- * @component
- * @param {HTMLMotionProps<"div">} props - The component props
- */
 export function Pointer({
   className,
   style,
@@ -30,18 +22,7 @@ export function Pointer({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const parentElement =
-      typeof window !== "undefined"
-        ? (containerRef.current?.parentElement ?? null)
-        : null;
-
     const handleMouseMove = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      setIsActive(true);
-    };
-
-    const handleMouseEnter = (e: MouseEvent) => {
       x.set(e.clientX);
       y.set(e.clientY);
       setIsActive(true);
@@ -51,20 +32,16 @@ export function Pointer({
       setIsActive(false);
     };
 
-    if (parentElement) {
-      parentElement.style.cursor = "none";
-      parentElement.addEventListener("mousemove", handleMouseMove);
-      parentElement.addEventListener("mouseenter", handleMouseEnter);
-      parentElement.addEventListener("mouseleave", handleMouseLeave);
-    }
+    // ← attach to window so portals (drawers, popovers) don't break tracking
+    window.addEventListener("mousemove", handleMouseMove);
+    document.documentElement.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      if (parentElement) {
-        parentElement.style.cursor = "";
-        parentElement.removeEventListener("mousemove", handleMouseMove);
-        parentElement.removeEventListener("mouseenter", handleMouseEnter);
-        parentElement.removeEventListener("mouseleave", handleMouseLeave);
-      }
+      window.removeEventListener("mousemove", handleMouseMove);
+      document.documentElement.removeEventListener(
+        "mouseleave",
+        handleMouseLeave,
+      );
     };
   }, [x, y]);
 
@@ -74,24 +51,15 @@ export function Pointer({
       <AnimatePresence>
         {isActive && (
           <motion.div
-            className="pointer-events-none fixed z-500 transform-[translate(-50%,-50%)]"
+            className="pointer-events-none fixed z-[9999] transform-[translate(-50%,-50%)]"
             style={{
               top: y,
               left: x,
               ...style,
             }}
-            initial={{
-              scale: 0,
-              opacity: 0,
-            }}
-            animate={{
-              scale: 1,
-              opacity: 1,
-            }}
-            exit={{
-              scale: 0,
-              opacity: 0,
-            }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
             {...props}
           >
             {children || (
