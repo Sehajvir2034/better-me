@@ -14,7 +14,7 @@ const PROTECTED = [
   "/trends",
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const session = getSessionCookie(request);
   const { pathname } = request.nextUrl;
 
@@ -24,7 +24,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Redirect logged-in users away from login/signup
   if ((pathname === "/login" || pathname === "/") && session) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
