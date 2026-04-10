@@ -264,7 +264,10 @@ function SearchDialog() {
         </kbd>
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="overflow-hidden p-0 shadow-lg sm:max-w-xl">
+        <DialogContent
+          aria-describedby={undefined}
+          className="overflow-hidden p-0 shadow-lg sm:max-w-xl"
+        >
           <DialogHeader className="sr-only">
             <DialogTitle>Search</DialogTitle>
           </DialogHeader>
@@ -292,7 +295,10 @@ function MobileSearch() {
         <span className="sr-only">Search</span>
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="overflow-hidden p-0 shadow-lg">
+        <DialogContent
+          aria-describedby={undefined}
+          className="overflow-hidden p-0 shadow-lg"
+        >
           <DialogHeader className="sr-only">
             <DialogTitle>Search</DialogTitle>
           </DialogHeader>
