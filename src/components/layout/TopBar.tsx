@@ -27,7 +27,9 @@ import {
   Check,
   Menu,
 } from "lucide-react";
-
+// Add these imports
+import { useSession, signOut } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -118,69 +120,6 @@ const NOTIFICATIONS = [
   },
   {
     id: 5,
-    type: "insight",
-    icon: TrendingUp,
-    title: "New Vitality Insight",
-    body: "Your recovery score is optimal today.",
-    time: "Yesterday",
-    unread: false,
-  },
-  {
-    id: 6,
-    type: "insight",
-    icon: TrendingUp,
-    title: "New Vitality Insight",
-    body: "Your recovery score is optimal today.",
-    time: "Yesterday",
-    unread: false,
-  },
-  {
-    id: 7,
-    type: "insight",
-    icon: TrendingUp,
-    title: "New Vitality Insight",
-    body: "Your recovery score is optimal today.",
-    time: "Yesterday",
-    unread: false,
-  },
-  {
-    id: 8,
-    type: "insight",
-    icon: TrendingUp,
-    title: "New Vitality Insight",
-    body: "Your recovery score is optimal today.",
-    time: "Yesterday",
-    unread: false,
-  },
-  {
-    id: 9,
-    type: "insight",
-    icon: TrendingUp,
-    title: "New Vitality Insight",
-    body: "Your recovery score is optimal today.",
-    time: "Yesterday",
-    unread: false,
-  },
-  {
-    id: 10,
-    type: "insight",
-    icon: TrendingUp,
-    title: "New Vitality Insight",
-    body: "Your recovery score is optimal today.",
-    time: "Yesterday",
-    unread: false,
-  },
-  {
-    id: 11,
-    type: "insight",
-    icon: TrendingUp,
-    title: "New Vitality Insight",
-    body: "Your recovery score is optimal today.",
-    time: "Yesterday",
-    unread: false,
-  },
-  {
-    id: 12,
     type: "insight",
     icon: TrendingUp,
     title: "New Vitality Insight",
@@ -687,23 +626,74 @@ function SettingsSheet() {
 // ─── Profile Dropdown ─────────────────────────────────────────────────────────
 
 function ProfileDropdown() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = React.useState(false);
   const [notifOpen, setNotifOpen] = React.useState(false);
   const [settingsOpen, setSettingsOpen] = React.useState(false);
   const unreadCount = NOTIFICATIONS.filter((n) => n.unread).length;
 
+  // Generate initials from name
+  const name = session?.user?.name ?? "User";
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 3);
+
+  const email = session?.user?.email ?? "";
+
+  const handleLogout = async () => {
+    setLoggingOut(true); // show overlay immediately
+    await signOut(); // sign out in parallel
+    setTimeout(() => {
+      router.push("/login");
+      router.refresh();
+    }, 1200); // redirect after animation plays
+  };
+
   return (
     <>
+      {/* ── Logout overlay ─────────────────────────────── */}
+      {loggingOut && (
+        <div className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-background animate-in fade-in duration-300">
+          <div className="flex flex-col items-center gap-6">
+            <div className="relative flex items-center justify-center">
+              <div className="absolute h-16 w-16 rounded-full bg-sidebar-primary/20 animate-ping" />
+              <div className="h-12 w-12 rounded-full bg-sidebar-primary flex items-center justify-center">
+                <span className="font-satoshi text-lg font-bold text-white">
+                  B
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <p className="font-satoshi text-sm font-semibold uppercase tracking-widest">
+                Signing you out...
+              </p>
+              <div className="flex gap-1.5">
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className="h-1.5 w-1.5 rounded-full bg-sidebar-primary animate-bounce"
+                    style={{ animationDelay: `${i * 150}ms` }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             size="icon"
-            className="relative h-9 w-9 rounded-full p-0"
+            className="relative h-9 w-9 rounded-full p-0 border-none"
           >
             <Avatar className="h-8 w-8 rounded-full">
-              <AvatarImage src="/avatar.jpg" alt="Profile" />
               <AvatarFallback className="rounded-full bg-sidebar-primary text-sidebar-primary-foreground font-satoshi text-sm font-bold">
-                AL
+                {initials}
               </AvatarFallback>
             </Avatar>
             {unreadCount > 0 && (
@@ -716,22 +706,21 @@ function ProfileDropdown() {
 
         <DropdownMenuContent align="end" className="w-64 p-0">
           {/* User info */}
-          <div className="flex items-center gap-3 px-4 py-3">
-            <Avatar className="h-10 w-10 rounded-xl">
-              <AvatarImage src="/avatar.jpg" alt="Profile" />
-              <AvatarFallback className="rounded-xl bg-sidebar-primary text-sidebar-primary-foreground font-satoshi text-sm font-semibold">
-                AL
+          <div className="flex  items-center gap-3 px-4 py-3">
+            <Avatar className="h-10 w-10 rounded-full ">
+              <AvatarFallback className="rounded-full bg-sidebar-primary border-none text-sidebar-primary-foreground font-satoshi text-sm font-semibold">
+                {initials}
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 ">
               <div className="flex items-center gap-1.5">
                 <p className="font-satoshi text-sm font-semibold truncate">
-                  Alex Lambert
+                  {name}
                 </p>
                 <Crown className="h-3 w-3 shrink-0 text-amber-500" />
               </div>
               <p className="font-satoshi text-xs text-muted-foreground truncate">
-                alex@email.com
+                {email}
               </p>
               <Badge className="mt-0.5 h-4 rounded-full bg-amber-100 px-1.5 text-[10px] font-satoshi font-medium text-amber-700 hover:bg-amber-100">
                 Premium · Level 12
@@ -801,9 +790,14 @@ function ProfileDropdown() {
 
           <DropdownMenuSeparator />
 
-          <div className="p-1">
-            <DropdownMenuItem className="gap-2 rounded-lg font-satoshi text-sm text-destructive focus:text-destructive">
-              <LogOut className="h-4 w-4" /> Log out
+          {/* Logout */}
+          <div className="px-1 pb-2">
+            <DropdownMenuItem
+              className="gap-2 rounded-lg font-satoshi text-sm text-destructive focus:text-destructive cursor-pointer"
+              onSelect={handleLogout}
+            >
+              <LogOut className="h-4 w-4 " />{" "}
+              <span className="text-destructive">Log out</span>
             </DropdownMenuItem>
           </div>
         </DropdownMenuContent>
@@ -856,7 +850,7 @@ export function TopBar() {
   });
 
   return (
-    <header className="sticky top-0 z-50 flex h-14 items-center  bg-black px-3backdrop-blur-sm sm:h-16 sm:px-6 ">
+    <header className="sticky top-0 z-50 flex h-14 items-center  bg-black px-3backdrop-blur-sm sm:h-16 sm:px-6">
       {/* ── LEFT: Menu toggle + Title ── */}
       <div className="flex items-center gap-2 min-w-0 flex-1">
         {" "}
