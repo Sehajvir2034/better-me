@@ -8,7 +8,16 @@ import {
   date,
   serial,
   jsonb,
+  pgEnum,
 } from "drizzle-orm/pg-core";
+
+export const categoryEnum = pgEnum("routine_category", [
+  "vitamins",
+  "skincare",
+  "haircare",
+  "nutrition",
+  "exercise",
+]);
 
 // ── Better Auth Tables ────────────────────────────────────
 export const user = pgTable("user", {
@@ -203,4 +212,14 @@ export const journalEntries = pgTable("journal_entries", {
   gratitude: text("gratitude"),
   intentions: text("intentions"),
   loggedAt: timestamp("logged_at").defaultNow(),
+});
+
+export const routineItems = pgTable("routine_items", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  label: text("label").notNull(),
+  scheduledTime: text("scheduled_time").notNull(),
+  category: categoryEnum("category").notNull(), // ← now infers the union
+  done: boolean("done").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
 });
