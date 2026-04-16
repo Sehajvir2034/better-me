@@ -856,7 +856,7 @@ export function TopBar() {
   });
 
   return (
-    <header className="sticky top-0 z-50 flex h-14 items-center  bg-black px-3backdrop-blur-sm sm:h-16 sm:px-6">
+    <header className="sticky top-0 z-50 flex h-14 items-center  bg-black px-3 backdrop-blur-sm sm:h-16 sm:px-6">
       {/* ── LEFT: Menu toggle + Title ── */}
       <div className="flex items-center gap-2 min-w-0 flex-1">
         {" "}

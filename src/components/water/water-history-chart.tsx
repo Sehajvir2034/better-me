@@ -393,7 +393,7 @@ export function WaterHistoryChart({ history, goal }: Props) {
                 <PopoverTrigger asChild>
                   <button
                     onClick={() => setPreset("custom")}
-                    className={`flex items-center gap-1 px-3 py-1 rounded-lg text-[11px] font-bold tracking-wider whitespace-nowrap transition-all ${
+                    className={`flex items-center gap-1 px-3 py-1 rounded-lg text-[12px] font-bold tracking-wider whitespace-nowrap transition-all ${
                       preset === "custom"
                         ? "bg-blue-500/20 text-blue-400"
                         : "text-white/30 hover:text-white/50"
@@ -425,7 +425,7 @@ export function WaterHistoryChart({ history, goal }: Props) {
               <button
                 key={p.value}
                 onClick={() => setPreset(p.value)}
-                className={`px-3 py-1 rounded-lg text-[11px] font-bold tracking-wider whitespace-nowrap transition-all ${
+                className={`px-3 py-1 rounded-lg text-[12px] font-bold tracking-wider whitespace-nowrap transition-all ${
                   preset === p.value
                     ? "bg-blue-500/20 text-blue-400"
                     : "text-white/30 hover:text-white/50"
@@ -541,7 +541,7 @@ export function WaterHistoryChart({ history, goal }: Props) {
       )}
 
       {/* Legend */}
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] font-semibold text-white/30 px-1">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-[14px] font-semibold text-white/30 px-1">
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-sm bg-blue-500 inline-block" /> Goal
           met
