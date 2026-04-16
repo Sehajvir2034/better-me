@@ -50,7 +50,7 @@ export function RoutinePanel({ items, onToggle }: Props) {
             <p className="text-white/40 text-sm font-bold uppercase tracking-widest mb-0.5">
               The Routine
             </p>
-            <p className="text-[#FFFFE4] font-black text-lg leading-none">
+            <p className="text-[#FFFFE4] font-black text-3xl leading-none">
               {doneCount}
               <span className="text-white/30 font-normal text-sm">
                 {" "}

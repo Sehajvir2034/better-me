@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "sonner";
 import localFont from "next/font/local";
 import { AppPointer } from "@/components/layout/AppPointer";
 
@@ -35,6 +36,7 @@ export default function RootLayout({
         <TooltipProvider delayDuration={0}>
           <AppPointer>{children}</AppPointer>
         </TooltipProvider>
+        <Toaster position="bottom-center" duration={4000} />
       </body>
     </html>
   );

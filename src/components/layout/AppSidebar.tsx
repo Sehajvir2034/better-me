@@ -55,10 +55,10 @@ export function AppSidebar() {
       <SidebarHeader className="px-4 py-3">
         <div className="flex items-start justify-between">
           <div>
-            <span className="text-2xl font-satoshi uppercase font-medium tracking-widest group-data-[collapsible=icon]:hidden">
+            <span className="text-2xl text-[#FFFFE4] font-satoshi uppercase font-medium tracking-widest group-data-[collapsible=icon]:hidden">
               Better Us
             </span>
-            <p className="text-xs font-satoshi uppercase text-muted-foreground font-medium tracking-widest">
+            <p className="text-sm font-satoshi uppercase text-muted-foreground font-medium tracking-widest">
               Health Tracker
             </p>
             {/* Icon shown when collapsed */}
@@ -70,7 +70,7 @@ export function AppSidebar() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 rounded-full hover:text-white cursor-pointer hover:bg-orange-400 mt-1 group-data-[collapsible=icon]:hidden"
+            className="h-7 w-7 rounded-full hover:text-[#FFFFE4] text-[#FFFFE4]  cursor-pointer hover:bg-orange-400 mt-1 group-data-[collapsible=icon]:hidden"
             onClick={toggleSidebar}
             aria-label="Close sidebar"
           >
@@ -92,8 +92,8 @@ export function AppSidebar() {
                   tooltip={label} // shows on collapsed icon hover
                 >
                   <Link href={href}>
-                    <Icon />
-                    <span className="text-sm font-satoshi uppercase font-normal tracking-widest">
+                    <Icon className="text-[#FFFFE4]" />
+                    <span className="text-[#FFFFE4] text-base font-satoshi capitalize font-normal tracking-widest">
                       {label}
                     </span>
                   </Link>
