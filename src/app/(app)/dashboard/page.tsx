@@ -182,20 +182,6 @@ export default async function DashboardPage() {
   return (
     <div className="font-satoshi min-h-screen px-4 text-white space-y-4">
       <HeroSection score={overallScore} yearProgress={yearProgress} />
-
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <WaterCard data={water} />
-        <SleepCard data={sleep} />
-        <NutritionCard data={nutrition} />
-        <ActivityCard data={activity} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <VitaminsCard data={vitamins} />
-        <SkincareCard data={skincare} />
-        <HaircareCard data={haircare} />
-      </div> */}
-      {/* Horizontal scrollable metric cards */}
       <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
         <WaterCard data={water} />
         <SleepCard data={sleep} />

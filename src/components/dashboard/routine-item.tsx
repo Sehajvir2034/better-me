@@ -67,12 +67,12 @@ export function RoutineItem({
               : "border-white/20 group-hover:border-white/40"
         }`}
       >
-        {done && <Check size={11} className="text-white" strokeWidth={3} />}
+        {done && <Check size={11} className="text-[#FFFFE4]" strokeWidth={3} />}
       </div>
 
       {/* Time */}
       <span
-        className={`shrink-0 text-[11px] font-bold tracking-widest tabular-nums
+        className={`shrink-0 text-[12px] font-bold tracking-widest tabular-nums
         ${done ? "text-white/20" : isNext ? "text-white/60" : "text-white/30"}`}
       >
         {scheduledTime}
@@ -80,7 +80,7 @@ export function RoutineItem({
 
       {/* Label */}
       <span
-        className={`flex-1 text-sm font-medium text-left
+        className={`flex-1 text-sm font-medium text-left tracking-widest
         ${done ? "line-through text-white/25" : isNext ? "text-[#FFFFE4]" : "text-[#FFFFE4]/60"}`}
       >
         {label}

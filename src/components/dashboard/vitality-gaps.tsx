@@ -70,10 +70,10 @@ export function VitalityGaps({ gaps }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-white/40 text-[12px] font-bold uppercase tracking-widest mb-0.5">
-              Vitality Gapss
+            <p className="text-white/40 text-sm font-bold uppercase tracking-widest mb-0.5">
+              Vitality Gaps
             </p>
-            <p className="text-[#FFFFE4] font-black text-lg leading-none">
+            <p className="text-[#FFFFE4] font-black text-3xl leading-none">
               {gaps.length}
               <span className="text-white/30 font-normal text-sm">
                 {" "}
@@ -81,7 +81,7 @@ export function VitalityGaps({ gaps }: Props) {
               </span>
             </p>
           </div>
-          <Zap size={18} className="text-yellow-400 opacity-60" />
+          <Zap size={26} className="text-yellow-400 opacity-60" />
         </div>
 
         {/* Gap rows */}
@@ -95,15 +95,15 @@ export function VitalityGaps({ gaps }: Props) {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-base">{gap.icon}</span>
+                      <span className="text-2xl">{gap.icon}</span>
                       <div>
-                        <p className={`text-xs font-bold ${c.text}`}>
+                        <p className={`text-sm font-bold ${c.text}`}>
                           {gap.pillar}
-                          <span className="text-white/30 font-normal ml-1.5">
+                          <span className="text-white/30 text-sm font-normal ml-1.5">
                             · {gap.deficit}
                           </span>
                         </p>
-                        <p className="text-white/50 text-[11px] mt-0.5">
+                        <p className="text-white/50 text-sm mt-0.5">
                           {gap.action}
                         </p>
                       </div>

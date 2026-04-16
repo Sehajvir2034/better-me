@@ -21,7 +21,7 @@ function FlameIcon({ streak }: { streak: number }) {
         : streak >= 3
           ? "text-yellow-400"
           : "text-white/20";
-  return <Flame size={14} className={color} />;
+  return <Flame size={18} className={color} />;
 }
 
 const statusConfig = {
@@ -43,16 +43,16 @@ export function StreaksPanel({ streaks }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-white/40 text-[11px] uppercase tracking-widest mb-0.5">
+            <p className="text-white/40 text-sm font-bold uppercase tracking-widest mb-0.5">
               Streaks
             </p>
-            <p className="text-white font-black text-lg leading-none">
+            <p className="text-[#FFFFE4] font-black text-3xl leading-none">
               {activeStreaks.length}
               <span className="text-white/30 font-normal text-sm"> active</span>
             </p>
           </div>
           {longestStreak >= 7 && (
-            <span className="text-[11px] font-black text-orange-400 tracking-widest">
+            <span className="text-sm font-black text-orange-400 tracking-widest">
               🔥 {longestStreak} DAY BEST
             </span>
           )}
@@ -73,26 +73,26 @@ export function StreaksPanel({ streaks }: Props) {
                 {/* Flame + count */}
                 <div className="flex items-center gap-1 w-12 shrink-0">
                   <FlameIcon streak={s.currentStreak} />
-                  <span className="text-white font-black text-sm tabular-nums">
+                  <span className="text-[#FFFFE4] font-black text-sm tabular-nums">
                     {s.currentStreak}
                   </span>
                 </div>
 
                 {/* Icon + pillar name */}
-                <span className="text-base">{s.icon}</span>
-                <span className="flex-1 text-sm text-white/70 font-medium">
+                <span className="text-lg">{s.icon}</span>
+                <span className="flex-1 text-sm text-[#FFFFE4] font-medium">
                   {s.pillar}
                 </span>
 
                 {/* Right side */}
                 <div className="flex items-center gap-2">
                   {isBest && (
-                    <span className="text-[10px] font-black text-yellow-400 tracking-widest">
+                    <span className="text-sm font-black text-yellow-400 tracking-widest">
                       BEST
                     </span>
                   )}
                   <span
-                    className={`text-[11px] font-bold tracking-wide ${cfg.labelColor}`}
+                    className={`text-sm font-bold tracking-wide ${cfg.labelColor}`}
                   >
                     {cfg.label}
                   </span>

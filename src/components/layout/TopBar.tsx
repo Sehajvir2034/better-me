@@ -864,20 +864,21 @@ export function TopBar() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 shrink-0 rounded-full hover:bg-orange-400 cursor-pointer"
+          color="#FFFFE4"
+          className="h-9 w-9 shrink-0 text-[#FFFFE4] rounded-full hover:bg-orange-400 cursor-pointer"
           onClick={toggleSidebar}
           aria-label="Toggle sidebar"
         >
           <Menu className="size-5" />
         </Button>
         <div className="flex flex-col justify-center min-w-0">
-          <h1 className="font-satoshi capitalize text-lg sm:text-2xl font-medium tracking-wide leading-tight truncate">
+          <h1 className="text-[#FFFFE4] font-satoshi capitalize text-lg sm:text-2xl font-medium tracking-wide leading-tight truncate">
             Daily Command Center
           </h1>
           <p className="font-satoshi text-xs uppercase tracking-widest text-muted-foreground sm:hidden">
             {todayShort}
           </p>
-          <p className="hidden font-satoshi text-xs uppercase tracking-widest text-muted-foreground sm:block">
+          <p className="hidden font-satoshi font-bold text-sm uppercase tracking-widest text-muted-foreground sm:block">
             {today}
           </p>
         </div>
