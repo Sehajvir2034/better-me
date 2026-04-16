@@ -99,18 +99,28 @@ export async function getWaterStreak(
 // ── Actions ──────────────────────────────────────────────
 
 export async function logWater(userId: string, ml: number, date?: string) {
-  await db.insert(waterLogs).values({
-    userId,
-    amountMl: ml,
-    date: date ?? todayString(),
-    loggedAt: new Date(),
-  });
+  const [entry] = await db
+    .insert(waterLogs)
+    .values({
+      userId,
+      amountMl: ml,
+      date: date ?? todayString(),
+      loggedAt: new Date(),
+    })
+    .returning(); // ← returns the inserted row with id
+
   revalidatePath("/water");
   revalidatePath("/dashboard");
+  return entry; // ← now entry.id exists
 }
 
 export async function deleteWaterEntry(id: number) {
-  await db.delete(waterLogs).where(eq(waterLogs.id, id));
+  const [entry] = await db
+    .delete(waterLogs)
+    .where(eq(waterLogs.id, id))
+    .returning(); // ← returns deleted row (useful for undo)
+
   revalidatePath("/water");
   revalidatePath("/dashboard");
+  return entry; // ← optional but good to have
 }

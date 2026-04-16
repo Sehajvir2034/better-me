@@ -89,7 +89,7 @@ export default async function WaterPage() {
       <WaterStatsRow streak={streak} avgMl={avgMl} bestMl={bestMl} />
 
       {/* Entry list — all entries, has internal date picker */}
-      <WaterEntryList entries={entries} />
+      <WaterEntryList entries={entries} userId={userId} />
 
       {/* Chart — pre-aggregated daily totals */}
       <WaterHistoryChart history={chartData} goal={goal} />

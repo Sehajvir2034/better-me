@@ -10,7 +10,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { logWater } from "@/lib/water";
+import { logWater, deleteWaterEntry } from "@/lib/water";
+import { toast } from "sonner";
+import { getToastStyle } from "@/lib/toast";
 
 interface Props {
   userId: string;
@@ -34,14 +36,62 @@ export function QuickLogBar({ userId }: Props) {
   const selectedStr = format(date, "yyyy-MM-dd");
   const isHistoric = selectedStr !== todayStr;
 
+  function formatAmount(ml: number) {
+    return ml >= 1000 ? `${(ml / 1000).toFixed(2)}L` : `${ml}ml`;
+  }
+
   function handlePreset(ml: number) {
-    startTransition(() => logWater(userId, ml, selectedStr));
+    startTransition(() => {
+      void (async () => {
+        const entry = await logWater(userId, ml, selectedStr);
+        toast.success("Water logged", {
+          description: `${formatAmount(ml)} added${isHistoric ? ` for ${format(date, "dd MMM")}` : ""}`,
+          icon: "💧",
+          style: getToastStyle("water", "dark"),
+          action: {
+            label: "Undo",
+            onClick: () => {
+              startTransition(() => {
+                void deleteWaterEntry(entry.id);
+              });
+              toast("Log removed", {
+                icon: "↩️",
+                description: `${formatAmount(ml)} undone`,
+                style: getToastStyle("water", "dark"),
+              });
+            },
+          },
+        });
+      })();
+    });
   }
 
   function handleCustomSubmit() {
     const ml = parseInt(customMl);
     if (!ml || ml <= 0) return;
-    startTransition(() => logWater(userId, ml, selectedStr));
+    startTransition(() => {
+      void (async () => {
+        const entry = await logWater(userId, ml, selectedStr);
+        toast.success("Water logged", {
+          description: `${formatAmount(ml)} added${isHistoric ? ` for ${format(date, "dd MMM")}` : ""}`,
+          icon: "💧",
+          style: getToastStyle("water", "dark"),
+          action: {
+            label: "Undo",
+            onClick: () => {
+              startTransition(() => {
+                void deleteWaterEntry(entry.id);
+              });
+              toast("Log removed", {
+                icon: "↩️",
+                description: `${formatAmount(ml)} undone`,
+                style: getToastStyle("water", "dark"),
+              });
+            },
+          },
+        });
+      })();
+    });
     setCustomMl("");
     setShowCustom(false);
   }
@@ -114,6 +164,7 @@ export function QuickLogBar({ userId }: Props) {
             placeholder="Amount in ml"
             value={customMl}
             onChange={(e) => setCustomMl(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleCustomSubmit()}
             className="flex-1 bg-white/5 border-2 border-blue-500/20 text-white placeholder:text-white/20 focus-visible:ring-blue-500/40"
           />
           <Button

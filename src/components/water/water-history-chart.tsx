@@ -477,10 +477,13 @@ export function WaterHistoryChart({ history, goal }: Props) {
               itemStyle={{
                 color: "rgba(255,255,255,0.9)",
               }}
-              formatter={(value: number) => [
-                value >= 1000 ? `${(value / 1000).toFixed(2)}L` : `${value}ml`,
-                "Water",
-              ]}
+              formatter={(value) => {
+                const ml = typeof value === "number" ? value : 0;
+                return [
+                  ml >= 1000 ? `${(ml / 1000).toFixed(2)}L` : `${ml}ml`,
+                  "Water",
+                ];
+              }}
             />
             <Bar
               dataKey="total"

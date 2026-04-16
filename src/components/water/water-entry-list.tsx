@@ -9,7 +9,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { deleteWaterEntry } from "@/lib/water";
+import { deleteWaterEntry, logWater } from "@/lib/water";
+import { getToastStyle } from "@/lib/toast";
+import { toast } from "sonner";
 
 interface Entry {
   id: number;
@@ -20,6 +22,7 @@ interface Entry {
 
 interface Props {
   entries: Entry[];
+  userId: string;
 }
 
 function formatTime(date: Date | null) {
@@ -43,7 +46,11 @@ function formatDateLabel(date: Date) {
   return format(date, "dd MMM yyyy");
 }
 
-export function WaterEntryList({ entries }: Props) {
+function formatAmount(ml: number) {
+  return ml >= 1000 ? `${(ml / 1000).toFixed(2)}L` : `${ml}ml`;
+}
+
+export function WaterEntryList({ entries, userId }: Props) {
   const [isPending, startTransition] = useTransition();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [open, setOpen] = useState(false);
@@ -54,8 +61,35 @@ export function WaterEntryList({ entries }: Props) {
   const filtered = entries.filter((e) => e.date === selectedStr);
   const totalMl = filtered.reduce((sum, e) => sum + e.amountMl, 0);
 
-  function handleDelete(id: number) {
-    startTransition(() => deleteWaterEntry(id));
+  function handleDelete(entry: Entry) {
+    console.log("userId at delete time:", userId);
+    const capturedUserId = userId; // ← capture at call time
+
+    startTransition(() => {
+      void (async () => {
+        await deleteWaterEntry(entry.id);
+        toast("Log removed", {
+          description: `${formatAmount(entry.amountMl)} deleted`,
+          icon: "🗑️",
+          style: getToastStyle("water", "dark"),
+          action: {
+            label: "Undo",
+            onClick: () => {
+              startTransition(() => {
+                void (async () => {
+                  await logWater(capturedUserId, entry.amountMl, entry.date); // ← use captured
+                  toast.success("Log restored", {
+                    icon: "↩️",
+                    description: `${formatAmount(entry.amountMl)} added back`,
+                    style: getToastStyle("water", "dark"),
+                  });
+                })();
+              });
+            },
+          },
+        });
+      })();
+    });
   }
 
   return (
@@ -121,7 +155,6 @@ export function WaterEntryList({ entries }: Props) {
       {/* Entries */}
       {filtered.length === 0 ? (
         <div className="py-6 text-center">
-          {/* <p className="text-2xl mb-2">💧</p> */}
           <p className="text-white/30 text-sm tracking-wider font-bold">
             No entries for this day.
           </p>
@@ -142,9 +175,7 @@ export function WaterEntryList({ entries }: Props) {
                 <span className="text-blue-400 text-base">💧</span>
                 <div>
                   <p className="text-[#FFFFE4] text-sm font-bold">
-                    {entry.amountMl >= 1000
-                      ? `${(entry.amountMl / 1000).toFixed(2)}L`
-                      : `${entry.amountMl}ml`}
+                    {formatAmount(entry.amountMl)}
                   </p>
                   <p className="text-white/30 text-xs font-semibold">
                     {formatTime(entry.loggedAt)}
@@ -154,7 +185,7 @@ export function WaterEntryList({ entries }: Props) {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => handleDelete(entry.id)}
+                onClick={() => handleDelete(entry)}
                 disabled={isPending}
                 className="opacity-80 hover:opacity-100 w-6 h-6 rounded-full text-white/90 hover:text-red-400 hover:bg-red-500/10 transition-all"
               >
