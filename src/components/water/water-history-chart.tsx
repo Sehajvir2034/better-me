@@ -404,7 +404,7 @@ export function WaterHistoryChart({ history, goal }: Props) {
                   </button>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-[calc(100vw-2rem)] max-w-sm p-0 bg-[#1a1c2a] border border-white/10 rounded-2xl shadow-xl"
+                  className="w-auto max-w-sm p-0 bg-[#1a1c2a] border border-white/10 rounded-2xl shadow-xl"
                   align="end"
                   collisionPadding={16}
                 >
