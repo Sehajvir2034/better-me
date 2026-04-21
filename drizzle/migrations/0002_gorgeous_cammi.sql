@@ -1,0 +1,1 @@
+ALTER TABLE "vitamins" ADD COLUMN "reminder_time" text;
