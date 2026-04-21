@@ -11,12 +11,25 @@ import {
   pgEnum,
 } from "drizzle-orm/pg-core";
 
+// ── Enums ─────────────────────────────────────────────────
 export const categoryEnum = pgEnum("routine_category", [
   "vitamins",
   "skincare",
   "haircare",
   "nutrition",
   "exercise",
+]);
+
+export const supplementTimeEnum = pgEnum("supplement_time", [
+  "morning",
+  "afternoon",
+  "evening",
+  "night",
+]);
+
+export const supplementStatusEnum = pgEnum("supplement_status", [
+  "taken",
+  "skipped",
 ]);
 
 // ── Better Auth Tables ────────────────────────────────────
@@ -75,11 +88,16 @@ export const vitamins = pgTable("vitamins", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
+    .references(() => user.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   dosage: text("dosage"),
-  frequency: text("frequency").notNull(),
-  timeOfDay: text("time_of_day"),
+  unit: text("unit"), // mg, IU, mcg, g, capsule
+  category: text("category"), // vitamin, mineral, herb, etc.
+  color: text("color"), // auto-assigned hex
+  frequency: text("frequency").notNull().default("daily"),
+  timeOfDay: supplementTimeEnum("time_of_day").notNull().default("morning"),
+  reminderTime: text("reminder_time"),
+  withFood: boolean("with_food").default(false),
   notes: text("notes"),
   active: boolean("active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
@@ -89,10 +107,14 @@ export const vitaminLogs = pgTable("vitamin_logs", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
-  vitaminId: integer("vitamin_id").references(() => vitamins.id),
-  takenAt: timestamp("taken_at").defaultNow(),
+    .references(() => user.id, { onDelete: "cascade" }),
+  vitaminId: integer("vitamin_id")
+    .notNull()
+    .references(() => vitamins.id, { onDelete: "cascade" }),
   date: date("date").notNull(),
+  status: supplementStatusEnum("status").notNull().default("taken"),
+  takenAt: timestamp("taken_at").defaultNow(),
+  note: text("note"),
 });
 
 // ── Nutrition ─────────────────────────────────────────────
@@ -100,7 +122,7 @@ export const nutritionLogs = pgTable("nutrition_logs", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
+    .references(() => user.id, { onDelete: "cascade" }),
   date: date("date").notNull(),
   mealType: text("meal_type"),
   foodName: text("food_name").notNull(),
@@ -118,7 +140,7 @@ export const waterLogs = pgTable("water_logs", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
+    .references(() => user.id, { onDelete: "cascade" }),
   date: date("date").notNull(),
   amountMl: integer("amount_ml").notNull(),
   loggedAt: timestamp("logged_at").defaultNow(),
@@ -128,7 +150,7 @@ export const waterGoals = pgTable("water_goals", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
+    .references(() => user.id, { onDelete: "cascade" }),
   dailyGoalMl: integer("daily_goal_ml").notNull().default(2500),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -138,7 +160,7 @@ export const skincareProducts = pgTable("skincare_products", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
+    .references(() => user.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   category: text("category"),
   amPm: text("am_pm"),
@@ -150,7 +172,7 @@ export const skincareLogs = pgTable("skincare_logs", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
+    .references(() => user.id, { onDelete: "cascade" }),
   date: date("date").notNull(),
   timeOfDay: text("time_of_day"),
   productsUsed: jsonb("products_used"),
@@ -163,7 +185,7 @@ export const haircareLogs = pgTable("haircare_logs", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
+    .references(() => user.id, { onDelete: "cascade" }),
   date: date("date").notNull(),
   activity: text("activity").notNull(),
   productsUsed: text("products_used"),
@@ -176,7 +198,7 @@ export const sleepLogs = pgTable("sleep_logs", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
+    .references(() => user.id, { onDelete: "cascade" }),
   date: date("date").notNull(),
   bedtime: timestamp("bedtime"),
   wakeTime: timestamp("wake_time"),
@@ -191,7 +213,7 @@ export const activityLogs = pgTable("activity_logs", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
+    .references(() => user.id, { onDelete: "cascade" }),
   date: date("date").notNull(),
   activityType: text("activity_type").notNull(),
   durationMinutes: integer("duration_minutes"),
@@ -205,7 +227,7 @@ export const journalEntries = pgTable("journal_entries", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // ← add
+    .references(() => user.id, { onDelete: "cascade" }),
   date: date("date").notNull(),
   mood: integer("mood"),
   entry: text("entry"),
@@ -214,12 +236,13 @@ export const journalEntries = pgTable("journal_entries", {
   loggedAt: timestamp("logged_at").defaultNow(),
 });
 
+// ── Routine ───────────────────────────────────────────────
 export const routineItems = pgTable("routine_items", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull(),
   label: text("label").notNull(),
   scheduledTime: text("scheduled_time").notNull(),
-  category: categoryEnum("category").notNull(), // ← now infers the union
+  category: categoryEnum("category").notNull(),
   done: boolean("done").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
