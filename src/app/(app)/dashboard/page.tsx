@@ -18,11 +18,9 @@ import {
 } from "@/components/dashboard/streaks-panel";
 
 import { HeroSection } from "@/components/dashboard/hero-section";
-import {
-  RoutinePanel,
-  type RoutineItemData,
-} from "@/components/dashboard/routine-panel";
-import { toggleRoutineItem } from "@/lib/routine";
+import { RoutinePanel } from "@/components/dashboard/routine-panel";
+import { getRoutineItems, toggleRoutineItem } from "@/lib/routine";
+import { format } from "date-fns";
 import {
   getTodayWater,
   getTodaySleep,
@@ -44,43 +42,6 @@ import {
   getYearProgress,
 } from "@/lib/vitality";
 // dashboard/page.tsx
-const routineItems = [
-  {
-    id: "1",
-    label: "Vitamin D3 + Omega 3",
-    scheduledTime: "09:00",
-    category: "vitamins" as const,
-    done: true,
-  },
-  {
-    id: "2",
-    label: "Morning Skincare (AM)",
-    scheduledTime: "10:00",
-    category: "skincare" as const,
-    done: true,
-  },
-  {
-    id: "3",
-    label: "Creatine",
-    scheduledTime: "14:00",
-    category: "nutrition" as const,
-    done: false,
-  },
-  {
-    id: "4",
-    label: "Minoxidil PM",
-    scheduledTime: "22:00",
-    category: "haircare" as const,
-    done: false,
-  },
-  {
-    id: "5",
-    label: "Evening Skincare (PM)",
-    scheduledTime: "22:30",
-    category: "skincare" as const,
-    done: false,
-  },
-] satisfies RoutineItemData[]; // ← also add this for compile-time safety
 // --- Gaps (compute from your fetched data) ---
 const gaps: VitalityGap[] = [
   {
@@ -140,6 +101,7 @@ export default async function DashboardPage() {
   if (!session?.user?.id) redirect("/login");
 
   const userId = session.user.id;
+  const today = format(new Date(), "yyyy-MM-dd");
 
   const [
     water,
@@ -150,6 +112,7 @@ export default async function DashboardPage() {
     skincare,
     haircare,
     journal,
+    routineItems,
   ] = await Promise.all([
     getTodayWater(userId),
     getTodaySleep(userId),
@@ -159,6 +122,7 @@ export default async function DashboardPage() {
     getTodaySkincare(userId),
     getTodayHaircare(userId),
     getTodayJournal(userId),
+    getRoutineItems(userId, today), // ← ADD
   ]);
 
   // ✅ Score calculation is now INSIDE the function, after data is fetched
@@ -191,7 +155,12 @@ export default async function DashboardPage() {
         <SkincareCard data={skincare} />
         <HaircareCard data={haircare} />
       </div>
-      <RoutinePanel items={routineItems} onToggle={toggleRoutineItem} />
+      <RoutinePanel
+        items={routineItems}
+        userId={userId}
+        today={today}
+        onToggle={toggleRoutineItem}
+      />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <VitalityGaps gaps={gaps} />
         <StreaksPanel streaks={streaks} />

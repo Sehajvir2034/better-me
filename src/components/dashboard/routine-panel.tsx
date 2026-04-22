@@ -7,10 +7,18 @@ export interface RoutineItemData {
   scheduledTime: string;
   category: "vitamins" | "skincare" | "haircare" | "nutrition" | "exercise";
   done: boolean;
+  supplementId?: number;
 }
 interface Props {
   items: RoutineItemData[];
-  onToggle: (id: string, done: boolean) => Promise<void>;
+  userId: string; // ← ADD
+  today: string; // ← ADD
+  onToggle: (
+    userId: string,
+    item: RoutineItemData,
+    done: boolean,
+    today: string,
+  ) => Promise<void>;
 }
 
 function timeToMinutes(t: string): number {
@@ -18,7 +26,7 @@ function timeToMinutes(t: string): number {
   return h * 60 + m;
 }
 
-export function RoutinePanel({ items, onToggle }: Props) {
+export function RoutinePanel({ items, userId, today, onToggle }: Props) {
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
@@ -97,7 +105,7 @@ export function RoutinePanel({ items, onToggle }: Props) {
                 <RoutineItem
                   {...item}
                   isNext={index === nextIndex}
-                  onToggle={onToggle}
+                  onToggle={(id, done) => onToggle(userId, item, done, today)}
                 />
               </div>
             );

@@ -212,7 +212,7 @@ export function AddSupplementDialog({
         </DialogTrigger>
       )}
 
-      <DialogContent className="bg-[#13151f] border border-white/10 text-white max-w-sm rounded-2xl p-6">
+      <DialogContent className="bg-[#13151f] border border-white/10 text-white max-w-sm rounded-2xl p-6 max-h-[90dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-satoshi text-center  text-[#FFFFE4] font-bold text-xl tracking-wider">
             {isEditing ? "Edit Supplement" : "Add Your Supplement"}
