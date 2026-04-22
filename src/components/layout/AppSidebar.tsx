@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { showPageTransition } from "./PageTransition";
+
 import {
   LayoutDashboard,
   Pill,
@@ -47,7 +49,7 @@ const PRIMARY_NAV = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, setOpen } = useSidebar();
 
   return (
     <Sidebar collapsible="offcanvas" variant="sidebar">
@@ -91,7 +93,13 @@ export function AppSidebar() {
                   data-active={pathname === href}
                   tooltip={label} // shows on collapsed icon hover
                 >
-                  <Link href={href}>
+                  <Link
+                    href={href}
+                    onClick={() => {
+                      if (pathname !== href) showPageTransition();
+                      setOpen(false);
+                    }}
+                  >
                     <Icon className="text-[#FFFFE4]" />
                     <span className="text-[#FFFFE4] text-base font-satoshi capitalize font-normal tracking-widest">
                       {label}

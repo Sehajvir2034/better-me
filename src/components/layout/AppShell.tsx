@@ -14,6 +14,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { cn } from "@/lib/utils";
 import { TopBar } from "./TopBar";
+import { PageTransition } from "./PageTransition";
 
 const BOTTOM_TABS = [
   { href: "/dashboard", label: "Home", icon: LayoutDashboard },
@@ -27,7 +28,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <div className="flex h-dvh w-full overflow-hidden">
         {/* shadcn Sidebar — handles desktop + mobile sheet automatically */}
         <AppSidebar />
@@ -37,7 +38,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <TopBar />
           {/* Page content */}
           <main className="flex-1 overflow-y-auto overscroll-contain px-4 pt-4 pb-24 md:px-6 md:pt-6 md:pb-6">
-            {children}
+            <PageTransition>{children}</PageTransition>
           </main>
         </div>
 
