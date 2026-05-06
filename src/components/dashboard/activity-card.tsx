@@ -75,13 +75,6 @@ export function ActivityCard({ data }: Props) {
                 <span className="text-[#FFFFE4]">{data.workouts}</span>
               </span>
             </div>
-            {/* <div className="flex items-center gap-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
-              <span className="text-white/40 text-[11px]">
-                Burned:{" "}
-                <span className="text-white/70">{data.calories} kcal</span>
-              </span>
-            </div> */}
           </div>
 
           {/* Progress segments */}
