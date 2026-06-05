@@ -60,11 +60,7 @@ export default async function SkincarePage() {
       {/* Main grid */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4">
         {/* Left — Ritual */}
-        <DailyRitual
-          amSteps={data.amSteps}
-          pmSteps={data.pmSteps}
-          userId={userId}
-        />
+        <DailyRitual amSteps={data.amSteps} pmSteps={data.pmSteps} />
 
         {/* Right — Analytics */}
         <div className="flex flex-col gap-4">
