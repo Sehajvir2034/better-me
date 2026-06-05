@@ -9,6 +9,7 @@ import {
   vitamins,
   skincareLogs,
   skincareProducts,
+  skincareRitualSteps,
   haircareLogs,
   journalEntries,
 } from "@/db/schema";
@@ -128,30 +129,69 @@ export async function getTodayVitamins(userId: string) {
 }
 
 // ─── SKINCARE ────────────────────────────────────────────
+// ─── SKINCARE ────────────────────────────────────────────
 export async function getTodaySkincare(userId: string) {
-  const [logs, activeProducts] = await Promise.all([
+  const [ritualSteps, logs] = await Promise.all([
     db
-      .select({ timeOfDay: skincareLogs.timeOfDay })
+      .select({
+        id: skincareRitualSteps.id,
+        productId: skincareRitualSteps.productId,
+        timeOfDay: skincareRitualSteps.timeOfDay,
+      })
+      .from(skincareRitualSteps)
+      .innerJoin(
+        skincareProducts,
+        eq(skincareRitualSteps.productId, skincareProducts.id),
+      )
+      .where(
+        and(
+          eq(skincareRitualSteps.userId, userId),
+          eq(skincareRitualSteps.active, true),
+          eq(skincareProducts.active, true),
+        ),
+      ),
+
+    db
+      .select({
+        productId: skincareLogs.productId,
+        timeOfDay: skincareLogs.timeOfDay,
+      })
       .from(skincareLogs)
       .where(
         and(eq(skincareLogs.userId, userId), eq(skincareLogs.date, today())),
       ),
-    db
-      .select({ id: skincareProducts.id })
-      .from(skincareProducts)
-      .where(
-        and(
-          eq(skincareProducts.userId, userId),
-          eq(skincareProducts.active, true),
-        ),
-      ),
   ]);
 
+  const completedSet = new Set(
+    logs
+      .filter(
+        (log) =>
+          log.productId !== null &&
+          log.productId !== undefined &&
+          log.timeOfDay !== null &&
+          log.timeOfDay !== undefined,
+      )
+      .map((log) => `${log.productId}-${log.timeOfDay}`),
+  );
+
+  const activeSteps = ritualSteps;
+
+  const amSteps = activeSteps.filter((step) => step.timeOfDay === "am");
+  const pmSteps = activeSteps.filter((step) => step.timeOfDay === "pm");
+
+  const amCompleted = amSteps.filter((step) =>
+    completedSet.has(`${step.productId}-am`),
+  ).length;
+
+  const pmCompleted = pmSteps.filter((step) =>
+    completedSet.has(`${step.productId}-pm`),
+  ).length;
+
   return {
-    amDone: logs.some((r) => r.timeOfDay === "am"),
-    pmDone: logs.some((r) => r.timeOfDay === "pm"),
-    stepsCompleted: logs.length,
-    totalSteps: activeProducts.length,
+    amDone: amSteps.length > 0 && amCompleted === amSteps.length,
+    pmDone: pmSteps.length > 0 && pmCompleted === pmSteps.length,
+    stepsCompleted: amCompleted + pmCompleted,
+    totalSteps: activeSteps.length,
   };
 }
 

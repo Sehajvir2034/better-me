@@ -54,7 +54,7 @@ export function SkincareCard({ data }: Props) {
           {/* AM / PM pills */}
           <div className="flex gap-2 mb-3">
             <div
-              className={`flex-1 rounded-xl py-1.5 text-center text-xs font-bold tracking-wider border ${
+              className={`flex-1 rounded-xl py-1.5 text-center text-xs font-bold tracking-wider  ${
                 data.amDone
                   ? "bg-rose-500/20 border-rose-500/40 text-rose-300"
                   : "bg-white/5 border-white/10 text-white/30"
@@ -63,7 +63,7 @@ export function SkincareCard({ data }: Props) {
               🌅 AM {data.amDone ? "✓" : "—"}
             </div>
             <div
-              className={`flex-1 rounded-xl py-1.5 text-center text-xs font-bold tracking-wider border ${
+              className={`flex-1 rounded-xl py-1.5 text-center text-xs font-bold tracking-wider ${
                 data.pmDone
                   ? "bg-indigo-500/20 border-indigo-500/40 text-indigo-300"
                   : "bg-white/5 border-white/10 text-white/30"
