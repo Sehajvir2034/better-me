@@ -1,36 +1,42 @@
 import { db } from "@/lib/db";
-import { skincareLogs, skincareProducts } from "@/db/schema";
+import {
+  skincareLogs,
+  skincareProducts,
+  skincareRitualSteps,
+} from "@/db/schema";
 import { eq, and, sql, desc } from "drizzle-orm";
 
 function today() {
   return new Date().toISOString().split("T")[0];
 }
 
-// ── Types ─────────────────────────────────────────────────────
 export type RoutineStep = {
-  id: number;
+  id: number; // ritual step id
+  productId: number;
   name: string;
   brand: string | null;
   category: string | null;
-  amPm: string | null;
+  amPm: "am" | "pm";
   sortOrder: number;
   done: boolean;
-  completedAt: string | null; // "08:15 AM" format
+  completedAt: string | null;
 };
 
 export type ShelfProduct = {
   id: number;
   name: string;
+  brand?: string | null;
   category: string | null;
   percentRemaining: number | null;
   imageUrl: string | null;
   openedAt: string | null;
   expiresAt: string | null;
+  createdAt: Date | null;
 };
 
 export type ConsistencyDay = {
   label: string;
-  pct: number; // 0-100
+  pct: number;
   isToday: boolean;
 };
 
@@ -44,33 +50,38 @@ export type SkincarePageData = {
   consistency: ConsistencyDay[];
 };
 
-// ── Queries ───────────────────────────────────────────────────
-
 export async function getRoutineSteps(
   userId: string,
   timeOfDay: "am" | "pm",
 ): Promise<RoutineStep[]> {
-  const [products, logs] = await Promise.all([
+  const [steps, logs] = await Promise.all([
     db
       .select({
-        id: skincareProducts.id,
+        id: skincareRitualSteps.id,
+        productId: skincareProducts.id,
         name: skincareProducts.name,
         brand: skincareProducts.brand,
         category: skincareProducts.category,
-        amPm: skincareProducts.amPm,
-        sortOrder: skincareProducts.sortOrder,
+        amPm: skincareRitualSteps.timeOfDay,
+        sortOrder: skincareRitualSteps.sortOrder,
       })
-      .from(skincareProducts)
+      .from(skincareRitualSteps)
+      .innerJoin(
+        skincareProducts,
+        eq(skincareRitualSteps.productId, skincareProducts.id),
+      )
       .where(
         and(
-          eq(skincareProducts.userId, userId),
+          eq(skincareRitualSteps.userId, userId),
+          eq(skincareRitualSteps.timeOfDay, timeOfDay),
+          eq(skincareRitualSteps.active, true),
           eq(skincareProducts.active, true),
         ),
       )
-      .orderBy(skincareProducts.sortOrder),
+      .orderBy(skincareRitualSteps.sortOrder),
     db
       .select({
-        productId: skincareLogs.productId,
+        ritualStepId: skincareLogs.ritualStepId,
         completedAt: skincareLogs.completedAt,
       })
       .from(skincareLogs)
@@ -84,18 +95,17 @@ export async function getRoutineSteps(
   ]);
 
   const doneMap = new Map(
-    logs.filter((l) => l.productId).map((l) => [l.productId!, l.completedAt]),
+    logs
+      .filter((l) => l.ritualStepId)
+      .map((l) => [l.ritualStepId!, l.completedAt]),
   );
 
-  const filtered = products.filter(
-    (p) => !p.amPm || p.amPm === "both" || p.amPm === timeOfDay,
-  );
-
-  return filtered.map((p) => ({
-    ...p,
-    sortOrder: p.sortOrder ?? 0,
-    done: doneMap.has(p.id),
-    completedAt: doneMap.get(p.id) ?? null,
+  return steps.map((step) => ({
+    ...step,
+    amPm: step.amPm === "pm" ? "pm" : "am",
+    sortOrder: step.sortOrder ?? 0,
+    done: doneMap.has(step.id),
+    completedAt: doneMap.get(step.id) ?? null,
   }));
 }
 
@@ -110,7 +120,7 @@ export async function getStreakDays(userId: string): Promise<number> {
   const dates = new Set(logs.map((l) => l.date));
   const todayStr = today();
   let streak = 0;
-  let cursor = new Date(todayStr + "T12:00:00");
+  const cursor = new Date(todayStr + "T12:00:00");
 
   while (true) {
     const ds = cursor.toISOString().split("T")[0];
@@ -128,19 +138,27 @@ export async function getStreakDays(userId: string): Promise<number> {
 export async function getConsistencyData(
   userId: string,
 ): Promise<ConsistencyDay[]> {
-  // Get total active products for denominator
-  const [totalProducts, logs] = await Promise.all([
+  const [totalSteps, logs] = await Promise.all([
     db
-      .select({ id: skincareProducts.id })
-      .from(skincareProducts)
+      .select({ id: skincareRitualSteps.id })
+      .from(skincareRitualSteps)
+      .innerJoin(
+        skincareProducts,
+        eq(skincareRitualSteps.productId, skincareProducts.id),
+      )
       .where(
         and(
-          eq(skincareProducts.userId, userId),
+          eq(skincareRitualSteps.userId, userId),
+          eq(skincareRitualSteps.active, true),
           eq(skincareProducts.active, true),
         ),
       ),
     db
-      .select({ date: skincareLogs.date })
+      .select({
+        date: skincareLogs.date,
+        productId: skincareLogs.productId,
+        timeOfDay: skincareLogs.timeOfDay,
+      })
       .from(skincareLogs)
       .where(
         and(
@@ -150,11 +168,18 @@ export async function getConsistencyData(
       ),
   ]);
 
-  const total = totalProducts.length || 1;
-  const countByDate = new Map<string, number>();
-  logs.forEach((l) => {
-    countByDate.set(l.date, (countByDate.get(l.date) ?? 0) + 1);
-  });
+  const total = totalSteps.length || 1;
+  const completedByDate = new Map<string, Set<string>>();
+
+  for (const log of logs) {
+    if (!log.productId || !log.timeOfDay) continue;
+
+    if (!completedByDate.has(log.date)) {
+      completedByDate.set(log.date, new Set<string>());
+    }
+
+    completedByDate.get(log.date)!.add(`${log.productId}-${log.timeOfDay}`);
+  }
 
   const days = Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
@@ -168,12 +193,11 @@ export async function getConsistencyData(
   return days.map((date) => {
     const d = new Date(date + "T12:00:00");
     const dow = d.getDay();
+    const completedCount = completedByDate.get(date)?.size ?? 0;
+
     return {
       label: DAY_LABELS[dow === 0 ? 6 : dow - 1],
-      pct: Math.min(
-        Math.round(((countByDate.get(date) ?? 0) / total) * 100),
-        100,
-      ),
+      pct: Math.round((completedCount / total) * 100),
       isToday: date === todayStr,
     };
   });
@@ -192,20 +216,23 @@ export async function getShelfProducts(
     .select({
       id: skincareProducts.id,
       name: skincareProducts.name,
+      brand: skincareProducts.brand,
       category: skincareProducts.category,
       percentRemaining: skincareProducts.percentRemaining,
       imageUrl: skincareProducts.imageUrl,
       openedAt: skincareProducts.openedAt,
       expiresAt: skincareProducts.expiresAt,
+      createdAt: skincareProducts.createdAt,
     })
     .from(skincareProducts)
     .where(
       and(
         eq(skincareProducts.userId, userId),
         eq(skincareProducts.active, true),
+        eq(skincareProducts.onShelf, true),
       ),
     )
-    .orderBy(skincareProducts.sortOrder)
+    .orderBy(desc(skincareProducts.createdAt))
     .limit(6);
 }
 
@@ -220,16 +247,14 @@ export async function getSkincarePageData(
     getConsistencyData(userId),
   ]);
 
-  const allIds = new Set([...amSteps, ...pmSteps].map((s) => s.id));
-  const doneIds = new Set(
-    [...amSteps, ...pmSteps].filter((s) => s.done).map((s) => s.id),
-  );
+  const allSteps = [...amSteps, ...pmSteps];
+  const doneSteps = allSteps.filter((s) => s.done);
 
   return {
     amSteps,
     pmSteps,
-    totalSteps: allIds.size,
-    completedSteps: doneIds.size,
+    totalSteps: allSteps.length,
+    completedSteps: doneSteps.length,
     streakDays,
     shelf,
     consistency,

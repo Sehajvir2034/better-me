@@ -121,7 +121,7 @@ export function HeroSection({ score, yearProgress }: Props) {
 
       {/* ── RIGHT — Milestone Card ── */}
       {/* ── MOBILE — compact strip ── */}
-      <div className="lg:hidden bg-[#171a22] rounded-2xl border border-white/15 px-4 py-3 flex items-center justify-between">
+      <div className="lg:hidden bg-[#171a22] rounded-2xl  px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-blue-300 text-sm">✦</span>
           <span className="text-white/40 text-xs tracking-widest uppercase">
@@ -140,7 +140,7 @@ export function HeroSection({ score, yearProgress }: Props) {
       </div>
 
       {/* ── DESKTOP — full card ── */}
-      <div className="hidden lg:flex bg-[#171a22] rounded-[1.50rem] border border-white/15 p-8 flex-col justify-between h-full">
+      <div className="hidden lg:flex bg-[#171a22] rounded-[1.50rem]  p-8 flex-col justify-between h-full">
         {/* Header */}
         <div className="flex items-center justify-between">
           <p className="text-blue-300 font-bold text-lg tracking-widest">
@@ -158,7 +158,7 @@ export function HeroSection({ score, yearProgress }: Props) {
               <div
                 key={tier.name}
                 className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all ${
-                  isActive ? "bg-white/8 border border-white/15" : "opacity-40"
+                  isActive ? "bg-white/8 " : "opacity-40"
                 }`}
               >
                 <div

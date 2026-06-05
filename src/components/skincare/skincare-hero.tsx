@@ -18,7 +18,7 @@ export function SkincareHero({
     <div className="flex gap-3 font-satoshi">
       {/* ── Progress card ── */}
       <div className="relative flex-1 rounded-2xl bg-[#13151f]  p-4 lg:p-6 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-br from-indigo-600/8 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-r from-indigo-600/8 to-transparent pointer-events-none" />
         <div className="relative flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-1.5">
@@ -39,7 +39,7 @@ export function SkincareHero({
               <div className="h-1.5 lg:h-2 w-full bg-white/8 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-linear-to-r from-teal-600 to-teal-400 rounded-full transition-all duration-700"
-                  style={{ width: `${50}%` }}
+                  style={{ width: `${pct}%` }}
                 />
               </div>
               <div className="flex justify-between text-sm mt-2 font-semibold">
@@ -69,7 +69,7 @@ export function SkincareHero({
       </div>
 
       {/* Streak — SEPARATE card, mobile only */}
-      <div className="lg:hidden shrink-0 w-28 rounded-2xl bg-linear-to-br from-indigo-600/8 to-indigo-600/5 flex flex-col items-center justify-center text-center p-4 gap-1">
+      <div className="lg:hidden shrink-0 w-28 rounded-2xl bg-linear-to-br border border-white/5 from-indigo-600/8 to-transparent flex flex-col items-center justify-center text-center p-4 gap-1">
         {streakDays > 0 && (
           <div className="w-9 h-9 rounded-full border border-orange-400/40 bg-orange-400/10 flex items-center justify-center">
             <Flame className="w-5 h-5 text-orange-400 fill-orange-400" />

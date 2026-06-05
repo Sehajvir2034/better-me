@@ -2,15 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import {
-  LayoutDashboard,
-  Salad,
-  Droplets,
-  Moon,
-  Dumbbell,
-  MoreHorizontal,
-} from "lucide-react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { LayoutDashboard, Salad, Droplets, Moon, Dumbbell } from "lucide-react";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { cn } from "@/lib/utils";
 import { TopBar } from "./TopBar";

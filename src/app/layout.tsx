@@ -34,7 +34,8 @@ export default function RootLayout({
     <html lang="en" className={satoshi.variable} suppressHydrationWarning>
       <body>
         <TooltipProvider delayDuration={0}>
-          <AppPointer>{children}</AppPointer>
+          {/* <AppPointer>{children}</AppPointer> */}
+          {children}
         </TooltipProvider>
         <Toaster position="bottom-center" duration={4000} />
       </body>

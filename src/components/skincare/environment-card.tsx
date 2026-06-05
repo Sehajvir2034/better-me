@@ -1,3 +1,6 @@
+import { Droplet, Sun, Wind } from "lucide-react";
+import { NumberTicker } from "@/components/ui/number-ticker";
+
 interface Props {
   env: { uvIndex: number; humidity: number; aqi: number };
 }
@@ -21,49 +24,92 @@ export function EnvironmentCard({ env }: Props) {
   const aqi = getAqiLabel(env.aqi);
 
   return (
-    <div className="rounded-2xl bg-[#13151f] border border-white/8 p-4">
-      <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/40 mb-4">
-        Environmental Factors
-      </p>
-      <div className="grid grid-cols-3 gap-2">
-        {/* UV Index */}
-        <div className="flex flex-col items-center gap-1.5">
-          <span className="text-2xl">☀️</span>
-          <span className={`text-2xl font-black font-satoshi text-[#FFFFE4]`}>
-            {env.uvIndex}
-          </span>
-          <span className="text-[10px] uppercase tracking-wider text-white/30">
-            UV Index
-          </span>
-          <span className={`text-xs font-bold ${uv.color}`}>{uv.label}</span>
+    <div className="overflow-hidden rounded-2xl bg-[#1e2235] font-satoshi">
+      {/* Header */}
+      <div className="flex justify-center border-b border-white/6 px-4 py-3.5">
+        <div className="flex items-center">
+          <p className="text-base font-semibold capitalize tracking-wider text-amber-400">
+            Environmental Factors
+          </p>
         </div>
-        {/* Humidity */}
-        <div className="flex flex-col items-center gap-1.5">
-          <span className="text-2xl">💧</span>
-          <span className="text-2xl font-black font-satoshi text-[#FFFFE4]">
-            {env.humidity}%
-          </span>
-          <span className="text-[10px] uppercase tracking-wider text-white/30">
-            Humidity
-          </span>
-          <span className="text-xs font-bold text-blue-400">
-            {env.humidity < 30
-              ? "Low"
-              : env.humidity < 60
-                ? "Balanced"
-                : "High"}
-          </span>
-        </div>
-        {/* AQI */}
-        <div className="flex flex-col items-center gap-1.5">
-          <span className="text-2xl">🌬️</span>
-          <span className="text-2xl font-black font-satoshi text-[#FFFFE4]">
-            {env.aqi}
-          </span>
-          <span className="text-[10px] uppercase tracking-wider text-white/30">
-            AQI
-          </span>
-          <span className={`text-xs font-bold ${aqi.color}`}>{aqi.label}</span>
+      </div>
+
+      {/* Body */}
+      <div className="p-4">
+        <div className="grid grid-cols-3 gap-2">
+          {/* UV Index */}
+          <div className="flex flex-col items-center gap-1.5">
+            <Sun
+              size={36}
+              color="#f1a31e"
+              strokeWidth={2.5}
+              absoluteStrokeWidth
+            />
+            <span className="text-3xl font-bold font-satoshi text-[#FFFFE4]">
+              <NumberTicker
+                className="text-[#FFFFE4]"
+                value={env.uvIndex}
+                decimalPlaces={0}
+              />
+            </span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-white/30">
+              UV Index
+            </span>
+            <span className={`text-sm font-semibold ${uv.color}`}>
+              {uv.label}
+            </span>
+          </div>
+
+          {/* Humidity */}
+          <div className="flex flex-col items-center gap-1.5">
+            <Droplet
+              size={36}
+              color="#20b0ee"
+              strokeWidth={2.5}
+              absoluteStrokeWidth
+            />
+            <span className="text-3xl font-bold font-satoshi text-[#FFFFE4]">
+              <NumberTicker
+                className="text-[#FFFFE4]"
+                value={env.humidity}
+                decimalPlaces={0}
+              />
+              %
+            </span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-white/30">
+              Humidity
+            </span>
+            <span className="text-sm font-bold text-blue-400">
+              {env.humidity < 30
+                ? "Low"
+                : env.humidity < 60
+                  ? "Balanced"
+                  : "High"}
+            </span>
+          </div>
+
+          {/* AQI */}
+          <div className="flex flex-col items-center gap-1.5">
+            <Wind
+              size={36}
+              color="#20eebb"
+              strokeWidth={2.5}
+              absoluteStrokeWidth
+            />
+            <span className="text-3xl font-bold font-satoshi text-[#FFFFE4]">
+              <NumberTicker
+                className="text-[#FFFFE4]"
+                value={env.aqi}
+                decimalPlaces={0}
+              />
+            </span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-white/30">
+              AQI
+            </span>
+            <span className={`text-sm font-semibold ${aqi.color}`}>
+              {aqi.label}
+            </span>
+          </div>
         </div>
       </div>
     </div>

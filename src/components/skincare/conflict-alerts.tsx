@@ -7,22 +7,20 @@ interface Props {
 
 export function ConflictAlerts({ conflicts }: Props) {
   return (
-    <div className="rounded-2xl bg-[#13151f] border border-amber-500/15 overflow-hidden">
+    <div className="rounded-2xl bg-[#1e2235]  overflow-hidden font-satoshi">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3.5 border-b border-white/6">
-        <div className="flex items-center gap-2">
-          <AlertTriangle size={14} className="text-amber-400" />
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-amber-400">
+      <div className="flex justify-center px-4 py-3.5 border-b border-white/6">
+        <div className="flex items-center">
+          <p className="text-base font-semibold capitalize tracking-wider text-amber-400">
             Product Conflict Alerts
           </p>
         </div>
-        <ShieldAlert size={16} className="text-white/20" />
       </div>
 
       <div className="p-4 space-y-3">
         {conflicts.length === 0 ? (
-          <p className="text-white/30 text-sm font-satoshi text-center py-3">
-            ✅ No conflicts detected in your current routine.
+          <p className="text-white/45 font-medium text-sm font-satoshi text-center py-3">
+            No conflicts detected in your current routine.
           </p>
         ) : (
           <>

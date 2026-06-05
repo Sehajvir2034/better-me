@@ -60,7 +60,11 @@ export default async function SkincarePage() {
       {/* Main grid */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4">
         {/* Left — Ritual */}
-        <DailyRitual amSteps={data.amSteps} pmSteps={data.pmSteps} />
+        <DailyRitual
+          amSteps={data.amSteps}
+          pmSteps={data.pmSteps}
+          userId={userId}
+        />
 
         {/* Right — Analytics */}
         <div className="flex flex-col gap-4">
@@ -71,7 +75,7 @@ export default async function SkincarePage() {
       </div>
 
       {/* Product Shelf */}
-      <ProductShelf products={data.shelf} userId={userId} />
+      <ProductShelf products={data.shelf} />
     </div>
   );
 }

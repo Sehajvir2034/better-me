@@ -172,6 +172,7 @@ export const skincareProducts = pgTable("skincare_products", {
   openedAt: date("opened_at"),
   expiresAt: date("expires_at"),
   active: boolean("active").default(true),
+  onShelf: boolean("on_shelf").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -180,15 +181,36 @@ export const skincareLogs = pgTable("skincare_logs", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+  ritualStepId: integer("ritual_step_id").references(
+    () => skincareRitualSteps.id,
+    {
+      onDelete: "cascade",
+    },
+  ),
   productId: integer("product_id").references(() => skincareProducts.id, {
     onDelete: "cascade",
   }),
   date: date("date").notNull(),
   timeOfDay: text("time_of_day"),
   completedAt: text("completed_at"),
-  productsUsed: jsonb("products_used"), // kept for legacy
+  productsUsed: jsonb("products_used"),
   notes: text("notes"),
   loggedAt: timestamp("logged_at").defaultNow(),
+});
+
+export const skincareRitualSteps = pgTable("skincare_ritual_steps", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  productId: integer("product_id")
+    .notNull()
+    .references(() => skincareProducts.id, { onDelete: "cascade" }),
+  timeOfDay: text("time_of_day").notNull(), // "am" | "pm"
+  instructions: text("instructions"),
+  sortOrder: integer("sort_order").default(0),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 // ── Hair Care ─────────────────────────────────────────────

@@ -32,7 +32,7 @@ export function AppPointer({ children }: { children: React.ReactNode }) {
           </svg>
         </motion.div>
       </Pointer>
-      {children} {/* ← children rendered inside the tracked div */}
+      {children}
     </div>
   );
 }

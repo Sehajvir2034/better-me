@@ -26,7 +26,7 @@ export function ActivityCard({ data }: Props) {
 
   return (
     <Link href="/activity">
-      <div className="shrink-0 w-60 h-60 group relative rounded-[2rem] bg-[#13151f] border border-white/8 p-5 flex flex-col justify-between hover:border-orange-500/30 transition-all duration-300 cursor-pointer overflow-hidden">
+      <div className="shrink-0 w-60 h-60 group relative rounded-[2rem] bg-[#13151f]  p-5 flex flex-col justify-between hover:border-orange-500/30 transition-all duration-300 cursor-pointer overflow-hidden">
         {/* Subtle glow */}
         <div className="absolute inset-0 bg-gradient-to-br from-orange-600/8 to-transparent pointer-events-none" />
 
