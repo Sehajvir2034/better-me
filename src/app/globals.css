@@ -4,9 +4,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
-* {
+/* * {
   cursor: none !important;
-}
+} */
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;

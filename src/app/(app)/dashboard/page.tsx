@@ -19,7 +19,7 @@ import {
 
 import { HeroSection } from "@/components/dashboard/hero-section";
 import { RoutinePanel } from "@/components/dashboard/routine-panel";
-import { getRoutineItems, toggleRoutineItem } from "@/lib/routine";
+import { getRoutineItems, toggleRoutineItem } from "@/lib/supplement-routine";
 import { format } from "date-fns";
 import {
   getTodayWater,

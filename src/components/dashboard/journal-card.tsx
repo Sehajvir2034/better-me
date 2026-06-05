@@ -22,7 +22,7 @@ export function JournalCard({ data }: Props) {
 
   return (
     <Link href="/journal">
-      <div className="group relative rounded-2xl bg-[#111128] border border-white/8 p-6 hover:border-amber-500/40 transition-all duration-300 cursor-pointer overflow-hidden">
+      <div className="group relative rounded-2xl bg-[#111128]  p-6 hover:border-amber-500/40 transition-all duration-300 cursor-pointer overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-amber-600/5 to-transparent" />
         <div className="relative z-10 flex items-center justify-between">
           <div className="flex items-center gap-4">

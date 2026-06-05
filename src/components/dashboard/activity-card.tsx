@@ -26,7 +26,7 @@ export function ActivityCard({ data }: Props) {
 
   return (
     <Link href="/activity">
-      <div className="shrink-0 w-60 h-60 group relative rounded-[2rem] bg-[#13151f] border border-white/8 p-5 flex flex-col justify-between hover:border-orange-500/30 transition-all duration-300 cursor-pointer overflow-hidden">
+      <div className="shrink-0 w-60 h-60 group relative rounded-[2rem] bg-[#13151f]  p-5 flex flex-col justify-between hover:border-orange-500/30 transition-all duration-300 cursor-pointer overflow-hidden">
         {/* Subtle glow */}
         <div className="absolute inset-0 bg-gradient-to-br from-orange-600/8 to-transparent pointer-events-none" />
 
@@ -75,13 +75,6 @@ export function ActivityCard({ data }: Props) {
                 <span className="text-[#FFFFE4]">{data.workouts}</span>
               </span>
             </div>
-            {/* <div className="flex items-center gap-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
-              <span className="text-white/40 text-[11px]">
-                Burned:{" "}
-                <span className="text-white/70">{data.calories} kcal</span>
-              </span>
-            </div> */}
           </div>
 
           {/* Progress segments */}
