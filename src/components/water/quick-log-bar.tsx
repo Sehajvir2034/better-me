@@ -97,7 +97,7 @@ export function QuickLogBar({ userId }: Props) {
   }
 
   return (
-    <div className="rounded-[1.5rem]  bg-[#1e2235] shadow-sm shadow-gray-800 p-6 space-y-3">
+    <div className="rounded-[1.5rem]  bg-[#12162a] shadow-sm shadow-gray-800 p-6 space-y-3">
       {/* Header + date picker */}
       <div className="flex items-center justify-between">
         <p className="text-white/40 text-base font-bold capitalize tracking-widest">
