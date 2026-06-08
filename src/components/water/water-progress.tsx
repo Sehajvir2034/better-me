@@ -59,12 +59,12 @@ export function WaterProgress({ consumed, goal }: Props) {
       </div>
 
       <div className="text-center">
-        <p className="mb-1 text-sm font-bold uppercase tracking-widest text-white/40">
+        <p className="mb-1 text-base font-bold uppercase tracking-widest text-white/45">
           {(consumed / 1000).toFixed(2)}L of {(safeGoal / 1000).toFixed(1)}L
         </p>
 
         {!done && (
-          <p className="text-sm font-semibold tracking-wider text-white/30">
+          <p className="text-base font-semibold tracking-wider text-white/35">
             {(remaining / 1000).toFixed(2)}L remaining
           </p>
         )}

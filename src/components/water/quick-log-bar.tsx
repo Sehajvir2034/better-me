@@ -19,10 +19,10 @@ interface Props {
 }
 
 const PRESETS = [
-  { label: "½ Owala", ml: 473 },
-  { label: "1 Owala", ml: 946 },
-  { label: "½ Stanley", ml: 590 },
-  { label: "1 Stanley", ml: 1180 },
+  { id: "half-owala", label: "½ Owala", ml: 590 },
+  { id: "one-owala", label: "1 Owala", ml: 1180 },
+  { id: "half-stanley", label: "½ Stanley", ml: 590 },
+  { id: "one-stanley", label: "1 Stanley", ml: 1180 },
 ];
 
 export function QuickLogBar({ userId }: Props) {
@@ -97,16 +97,16 @@ export function QuickLogBar({ userId }: Props) {
   }
 
   return (
-    <div className="rounded-[1.5rem] bg-[#13151f] border border-white/8 p-4 space-y-3">
+    <div className="rounded-[1.5rem]  bg-[#1e2235] shadow-sm shadow-gray-800 p-6 space-y-3">
       {/* Header + date picker */}
       <div className="flex items-center justify-between">
-        <p className="text-white/40 text-sm font-bold uppercase tracking-widest">
+        <p className="text-white/40 text-base font-bold capitalize tracking-widest">
           Quick Log
         </p>
         <div className="flex items-center gap-2">
           {isHistoric && (
-            <span className="text-xs font-bold text-yellow-400 tracking-wider">
-              HISTORIC
+            <span className="text-sm font-medium text-yellow-400 tracking-wider">
+              Historic
             </span>
           )}
           <Popover open={open} onOpenChange={setOpen}>
@@ -142,14 +142,16 @@ export function QuickLogBar({ userId }: Props) {
       <div className="grid grid-cols-4 gap-2">
         {PRESETS.map((p) => (
           <Button
-            key={p.ml}
-            variant="outline"
+            key={p.id}
+            variant="ghost"
             onClick={() => handlePreset(p.ml)}
             disabled={isPending}
-            className="flex flex-col items-center gap-0.5 h-auto py-2.5 bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/40 active:scale-95 transition-all"
+            className="flex flex-col items-center gap-0.5 h-auto w-auto py-2.5 bg-blue-500/10 hover:bg-blue-500/20  active:scale-95 transition-all cursor-pointer"
           >
-            <span className="text-blue-400 font-bold text-sm">{p.label}</span>
-            <span className="text-white/30 font-semibold text-[12px]">
+            <span className="text-blue-400 font-semibold text-base">
+              {p.label}
+            </span>
+            <span className="text-white/45 font-semibold text-sm tracking-wider">
               {p.ml}ml
             </span>
           </Button>
@@ -185,9 +187,9 @@ export function QuickLogBar({ userId }: Props) {
         </div>
       ) : (
         <Button
-          variant="outline"
+          variant="ghost"
           onClick={() => setShowCustom(true)}
-          className="w-full bg-transparent border-white/8 text-white/30 hover:bg-white/4 hover:text-white/50 text-sm font-bold tracking-wider"
+          className="w-full bg-transparent border-white/8 text-white/45 hover:bg-white/4 hover:text-white/55 text-base font-medium tracking-wider cursor-pointer"
         >
           + Custom Amount
         </Button>

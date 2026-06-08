@@ -10,21 +10,21 @@ export function WaterStatsRow({ streak, avgMl, bestMl }: Props) {
       icon: "🔥",
       label: "Streak",
       value: `${streak}d`,
-      glow: "from-orange-600/8",
+      glow: "from-orange-600/20",
       border: "hover:border-orange-500/30",
     },
     {
       icon: "📅",
       label: "7d Avg",
       value: `${(avgMl / 1000).toFixed(2)}L`,
-      glow: "from-blue-600/8",
+      glow: "from-blue-600/20",
       border: "hover:border-blue-500/30",
     },
     {
       icon: "🏆",
       label: "Best",
       value: `${(bestMl / 1000).toFixed(2)}L`,
-      glow: "from-yellow-600/8",
+      glow: "from-yellow-600/20",
       border: "hover:border-yellow-500/30",
     },
   ];
@@ -34,7 +34,7 @@ export function WaterStatsRow({ streak, avgMl, bestMl }: Props) {
       {stats.map((s) => (
         <div
           key={s.label}
-          className={`relative rounded-[1.25rem] bg-[#13151f] border border-white/8 ${s.border} p-3 flex flex-col items-center gap-1 overflow-hidden transition-all duration-300`}
+          className={`relative rounded-[1.25rem] bg-[#13151f] ${s.border} p-3 flex flex-col items-center gap-1 overflow-hidden transition-all duration-300`}
         >
           {/* Per-stat glow */}
           <div

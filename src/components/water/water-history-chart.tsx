@@ -107,7 +107,7 @@ export function WaterHistoryChart({ history, goal }: Props) {
       : "Custom";
 
   return (
-    <div className="rounded-[1.5rem] bg-[#13151f] border border-white/8 p-4 space-y-4">
+    <div className="rounded-[1.5rem] bg-[#12162a]  p-6 space-y-4">
       {/* Header + Presets */}
       <div className="flex flex-col gap-2">
         <p className="text-white/40 text-sm font-bold uppercase tracking-widest">

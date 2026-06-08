@@ -26,9 +26,9 @@ export function WaterGoalEditor({ userId, currentGoal }: Props) {
     return (
       <button
         onClick={() => setEditing(true)}
-        className="flex items-center gap-1.5 text-white/30 hover:text-white/60 transition-colors text-xs"
+        className="flex items-center gap-1.5 text-white/45 hover:text-white/60 transition-colors text-base font-medium tracking-wider"
       >
-        <Pencil size={11} />
+        <Pencil size={14} />
         Goal: {(currentGoal / 1000).toFixed(1)}L
       </button>
     );

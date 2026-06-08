@@ -93,7 +93,7 @@ export function WaterEntryList({ entries, userId }: Props) {
   }
 
   return (
-    <div className="rounded-[1.5rem] bg-[#13151f] border border-white/8 p-4 space-y-3">
+    <div className="rounded-[1.5rem] bg-[#12162a]  p-6 space-y-3">
       {/* Header + date picker */}
       <div className="flex items-center justify-between">
         <div>
