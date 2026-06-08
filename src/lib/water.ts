@@ -4,8 +4,11 @@ import { waterLogs, waterGoals } from "@/db/schema";
 import { eq, and, gte, lte, desc, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-function todayString() {
-  return new Date().toISOString().split("T")[0]; // "2026-04-15"
+function localDateString(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 // ── Queries ──────────────────────────────────────────────
@@ -14,7 +17,9 @@ export async function getWaterEntriesToday(userId: string) {
   return db
     .select()
     .from(waterLogs)
-    .where(and(eq(waterLogs.userId, userId), eq(waterLogs.date, todayString())))
+    .where(
+      and(eq(waterLogs.userId, userId), eq(waterLogs.date, localDateString())),
+    )
     .orderBy(desc(waterLogs.loggedAt));
 }
 
@@ -104,7 +109,7 @@ export async function logWater(userId: string, ml: number, date?: string) {
     .values({
       userId,
       amountMl: ml,
-      date: date ?? todayString(),
+      date: date ?? localDateString(),
       loggedAt: new Date(),
     })
     .returning(); // ← returns the inserted row with id

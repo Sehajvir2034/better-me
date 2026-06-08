@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { Droplet } from "lucide-react";
 import { NumberTicker } from "@/components/ui/number-ticker";
@@ -8,8 +9,11 @@ interface Props {
 }
 
 export function WaterCard({ data }: Props) {
-  const pct = Math.min(Math.round((data.consumed / data.goal) * 100), 100);
+  const safeGoal = data.goal > 0 ? data.goal : 2500;
+  const pct = Math.min(Math.round((data.consumed / safeGoal) * 100), 100);
+
   const status = pct >= 100 ? "OPTIMAL" : pct >= 60 ? "HYDRATED" : "LOW";
+
   const statusColor =
     pct >= 100
       ? "text-emerald-400"
@@ -19,37 +23,38 @@ export function WaterCard({ data }: Props) {
 
   return (
     <Link href="/water">
-      <div className="shrink-0 w-60 h-60 group relative rounded-[2rem] bg-[#13151f] p-5 flex flex-col justify-between  transition-all duration-300 cursor-pointer overflow-hidden">
-        {/* Subtle glow */}
-        <div className="absolute inset-0 bg-linear-to-br from-blue-600/8 to-transparent pointer-events-none" />
+      <div className="group relative flex h-60 w-60 shrink-0 cursor-pointer flex-col justify-between overflow-hidden rounded-[2rem] bg-[#13151f] p-5 transition-all duration-300">
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-blue-600/8 to-transparent" />
 
-        {/* Top row — icon + status */}
-        <div className="relative flex justify-between items-start p-0.5">
-          <div className="p-3 rounded-full bg-blue-500/15 flex items-center justify-center">
+        <div className="relative flex items-start justify-between p-0.5">
+          <div className="flex items-center justify-center rounded-full bg-blue-500/15 p-3">
             <Droplet size={26} className="text-blue-400" />
           </div>
+
           <span className={`text-sm font-bold tracking-widest ${statusColor}`}>
             {status}
           </span>
         </div>
 
-        {/* Bottom — metric */}
         <div className="relative p-0.5">
-          <p className="text-white/40 text-[12px] uppercase tracking-widest mb-1">
+          <p className="mb-1 text-[12px] uppercase tracking-widest text-white/40">
             Water
           </p>
-          <div className="flex items-end gap-1 mb-4">
-            <span className="text-3xl font-black text-white leading-none">
+
+          <div className="mb-4 flex items-end gap-1">
+            <span className="text-3xl font-black leading-none text-white">
               <NumberTicker
                 className="text-[#FFFFE4]"
                 value={parseFloat((data.consumed / 1000).toFixed(1))}
                 decimalPlaces={1}
               />
             </span>
-            <span className="text-white/30 text-sm tracking-widest  mb-0.5">
-              / {(data.goal / 1000).toFixed(1)}L
+
+            <span className="mb-0.5 text-sm tracking-widest text-white/30">
+              / {(safeGoal / 1000).toFixed(1)}L
             </span>
           </div>
+
           <div className="relative flex gap-1">
             {Array.from({ length: 10 }).map((_, i) => (
               <div

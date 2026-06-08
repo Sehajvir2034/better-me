@@ -77,19 +77,6 @@ export function WaterHistoryChart({ history, goal }: Props) {
     return getPresetRange(preset);
   }, [preset, customRange]);
 
-  // Full filtered + sorted dataset
-  // const data = useMemo(() => {
-  //   return [...history]
-  //     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-  //     .filter((d) => {
-  //       const date = new Date(d.date);
-  //       return date >= activeRange.from && date <= activeRange.to;
-  //     })
-  //     .map((d) => ({
-  //       ...d,
-  //       dateLabel: format(new Date(d.date), "dd MMM"),
-  //     }));
-  // }, [history, activeRange]);
   const data = useMemo(() => {
     // Convert range boundaries to YYYY-MM-DD strings for safe comparison
     const fromStr = format(activeRange.from, "yyyy-MM-dd");
