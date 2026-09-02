@@ -429,7 +429,7 @@ export function ProductShelf({
               trigger={
                 <button
                   type="button"
-                  className="mt-5 inline-flex items-center gap-2 rounded-2xl  bg-teal-500/12 px-4 py-2.5 text-sm font-bold text-teal-300 transition-all hover:bg-teal-500/20 cursor-pointer"
+                  className="mt-5 inline-flex items-center gap-2 rounded-2xl  bg-teal-500/12 px-4 py-2.5 text-sm font-semibold text-teal-300 transition-all hover:bg-teal-500/20 cursor-pointer"
                 >
                   <Sparkles size={14} />
                   Add your first product

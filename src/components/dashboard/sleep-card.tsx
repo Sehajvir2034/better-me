@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Moon } from "lucide-react";
 import { NumberTicker } from "@/components/ui/number-ticker";
+import { showPageTransition } from "@/components/layout/PageTransition";
 
 interface Props {
   data: { hours: number | null; quality: string | null };
@@ -37,7 +38,7 @@ export function SleepCard({ data }: Props) {
     : 0;
 
   return (
-    <Link href="/sleep">
+    <Link href="/sleep" onClick={() => showPageTransition()} className="block">
       <div className="shrink-0 w-60 h-60 group relative rounded-[2rem] bg-[#13151f]  p-5 flex flex-col justify-between  transition-all duration-300 cursor-pointer overflow-hidden">
         {/* Subtle glow */}
         <div className="absolute inset-0 bg-linear-to-br from-purple-600/8 to-transparent pointer-events-none" />

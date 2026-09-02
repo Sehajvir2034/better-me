@@ -101,7 +101,7 @@ export function AppSidebar() {
                     }}
                   >
                     <Icon className="text-[#FFFFE4]" />
-                    <span className="text-[#FFFFE4] text-base font-satoshi capitalize font-normal tracking-widest">
+                    <span className="text-[#FFFFE4] text-base font-satoshi capitalize font-semibold tracking-wider">
                       {label}
                     </span>
                   </Link>

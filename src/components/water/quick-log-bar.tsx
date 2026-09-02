@@ -1,6 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -31,7 +32,7 @@ export function QuickLogBar({ userId }: Props) {
   const [customMl, setCustomMl] = useState("");
   const [date, setDate] = useState<Date>(new Date());
   const [open, setOpen] = useState(false);
-
+  const router = useRouter();
   const todayStr = format(new Date(), "yyyy-MM-dd");
   const selectedStr = format(date, "yyyy-MM-dd");
   const isHistoric = selectedStr !== todayStr;
@@ -44,6 +45,7 @@ export function QuickLogBar({ userId }: Props) {
     startTransition(() => {
       void (async () => {
         const entry = await logWater(userId, ml, selectedStr);
+        router.refresh();
         toast.success("Water logged", {
           description: `${formatAmount(ml)} added${isHistoric ? ` for ${format(date, "dd MMM")}` : ""}`,
           icon: "💧",
@@ -53,6 +55,7 @@ export function QuickLogBar({ userId }: Props) {
             onClick: () => {
               startTransition(() => {
                 void deleteWaterEntry(entry.id);
+                router.refresh();
               });
               toast("Log removed", {
                 icon: "↩️",

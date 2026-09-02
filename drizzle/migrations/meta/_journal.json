@@ -22,6 +22,13 @@
       "when": 1776765130901,
       "tag": "0002_gorgeous_cammi",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782728142197,
+      "tag": "0003_clean_shockwave",
+      "breakpoints": true
     }
   ]
 }

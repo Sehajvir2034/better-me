@@ -79,6 +79,8 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 
+import { AuthTransitionOverlay } from "@/components/auth/auth-transition-overlay";
+
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
 const NOTIFICATIONS = [
@@ -651,45 +653,22 @@ function ProfileDropdown() {
   const email = session?.user?.email ?? "";
 
   const handleLogout = async () => {
-    setLoggingOut(true); // show overlay immediately
-    await signOut(); // sign out in parallel
-    setTimeout(() => {
-      router.push("/login");
-      router.refresh();
-    }, 1200); // redirect after animation plays
+    setLoggingOut(true);
+
+    try {
+      await signOut();
+      setTimeout(() => {
+        router.push("/login");
+        router.refresh();
+      }, 1200);
+    } catch {
+      setLoggingOut(false);
+    }
   };
 
   return (
     <>
-      {/* ── Logout overlay ─────────────────────────────── */}
-      {loggingOut && (
-        <div className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-background animate-in fade-in duration-300">
-          <div className="flex flex-col items-center gap-6">
-            <div className="relative flex items-center justify-center">
-              <div className="absolute h-16 w-16 rounded-full bg-sidebar-primary/20 animate-ping" />
-              <div className="h-12 w-12 rounded-full bg-sidebar-primary flex items-center justify-center">
-                <span className="font-satoshi text-lg font-bold text-white">
-                  B
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <p className="font-satoshi text-sm font-semibold uppercase tracking-widest">
-                Signing you out...
-              </p>
-              <div className="flex gap-1.5">
-                {[0, 1, 2].map((i) => (
-                  <div
-                    key={i}
-                    className="h-1.5 w-1.5 rounded-full bg-sidebar-primary animate-bounce"
-                    style={{ animationDelay: `${i * 150}ms` }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <AuthTransitionOverlay open={loggingOut} message="Signing you out..." />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Pill } from "lucide-react";
 import { NumberTicker } from "@/components/ui/number-ticker";
+import { showPageTransition } from "@/components/layout/PageTransition";
 
 interface Props {
   data: { taken: number; total: number };
@@ -18,7 +19,11 @@ export function VitaminsCard({ data }: Props) {
       : "text-white/30";
 
   return (
-    <Link href="/vitamins">
+    <Link
+      href="/vitamins"
+      onClick={() => showPageTransition()}
+      className="block"
+    >
       <div className="shrink-0 w-60 h-60 group relative rounded-[2rem] bg-[#13151f]  p-5 flex flex-col justify-between  transition-all duration-300 cursor-pointer overflow-hidden">
         {/* Subtle glow */}
         <div className="absolute inset-0 bg-linear-to-br from-pink-600/8 to-transparent pointer-events-none" />

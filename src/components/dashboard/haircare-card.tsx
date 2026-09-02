@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Wind } from "lucide-react";
+import { showPageTransition } from "@/components/layout/PageTransition";
 
 interface Props {
   data: {
@@ -30,7 +31,11 @@ export function HaircareCard({ data }: Props) {
         : `Last washed ${data.lastWashDaysAgo}d ago`;
 
   return (
-    <Link href="/haircare">
+    <Link
+      href="/haircare"
+      onClick={() => showPageTransition()}
+      className="block"
+    >
       <div className="shrink-0 w-60 h-60 group relative rounded-[2rem] bg-[#13151f]  p-5 flex flex-col justify-between hover:border-teal-500/30 transition-all duration-300 cursor-pointer overflow-hidden">
         {/* Subtle glow */}
         <div className="absolute inset-0 bg-linear-to-br from-teal-600/8 to-transparent pointer-events-none" />

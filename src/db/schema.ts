@@ -1,3 +1,4 @@
+import { getSleepOverview } from "@/lib/sleep";
 import {
   pgTable,
   text,
@@ -7,6 +8,8 @@ import {
   timestamp,
   date,
   serial,
+  uniqueIndex,
+  index,
   jsonb,
   pgEnum,
 } from "drizzle-orm/pg-core";
@@ -91,9 +94,9 @@ export const vitamins = pgTable("vitamins", {
     .references(() => user.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   dosage: text("dosage"),
-  unit: text("unit"), // mg, IU, mcg, g, capsule
-  category: text("category"), // vitamin, mineral, herb, etc.
-  color: text("color"), // auto-assigned hex
+  unit: text("unit"),
+  category: text("category"),
+  color: text("color"),
   frequency: text("frequency").notNull().default("daily"),
   timeOfDay: supplementTimeEnum("time_of_day").notNull().default("morning"),
   reminderTime: text("reminder_time"),
@@ -206,7 +209,7 @@ export const skincareRitualSteps = pgTable("skincare_ritual_steps", {
   productId: integer("product_id")
     .notNull()
     .references(() => skincareProducts.id, { onDelete: "cascade" }),
-  timeOfDay: text("time_of_day").notNull(), // "am" | "pm"
+  timeOfDay: text("time_of_day").notNull(),
   instructions: text("instructions"),
   sortOrder: integer("sort_order").default(0),
   active: boolean("active").default(true).notNull(),
@@ -227,19 +230,109 @@ export const haircareLogs = pgTable("haircare_logs", {
 });
 
 // ── Sleep ─────────────────────────────────────────────────
-export const sleepLogs = pgTable("sleep_logs", {
-  id: serial("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  date: date("date").notNull(),
-  bedtime: timestamp("bedtime"),
-  wakeTime: timestamp("wake_time"),
-  durationMinutes: integer("duration_minutes"),
-  quality: integer("quality"),
-  notes: text("notes"),
-  loggedAt: timestamp("logged_at").defaultNow(),
-});
+export const sleepLogs = pgTable(
+  "sleep_logs",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    sleepDate: date("sleep_date").notNull(),
+
+    bedTime: timestamp("bed_time"),
+    attemptedSleepTime: timestamp("attempted_sleep_time"),
+    fellAsleepTime: timestamp("fell_asleep_time"),
+    wakeTime: timestamp("wake_time"),
+    outOfBedTime: timestamp("out_of_bed_time"),
+
+    awakeningsCount: integer("awakenings_count").default(0).notNull(),
+    awakeMinutes: integer("awake_minutes").default(0).notNull(),
+
+    sleepQuality: integer("sleep_quality"),
+    morningEnergy: integer("morning_energy"),
+    morningMood: integer("morning_mood"),
+
+    notes: text("notes"),
+
+    hadLateCaffeine: boolean("had_late_caffeine").default(false).notNull(),
+    hadAlcohol: boolean("had_alcohol").default(false).notNull(),
+    hadLateMeal: boolean("had_late_meal").default(false).notNull(),
+    hadWorkout: boolean("had_workout").default(false).notNull(),
+    hadHighStress: boolean("had_high_stress").default(false).notNull(),
+    hadLateScreenTime: boolean("had_late_screen_time").default(false).notNull(),
+
+    source: text("source").default("manual").notNull(),
+
+    loggedAt: timestamp("logged_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => ({
+    userSleepDateIdx: uniqueIndex("sleep_logs_user_sleep_date_idx").on(
+      table.userId,
+      table.sleepDate,
+    ),
+    userLoggedAtIdx: index("sleep_logs_user_logged_at_idx").on(
+      table.userId,
+      table.loggedAt,
+    ),
+  }),
+);
+
+export const sleepNaps = pgTable(
+  "sleep_naps",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    napDate: date("nap_date").notNull(),
+    startTime: timestamp("start_time").notNull(),
+    endTime: timestamp("end_time").notNull(),
+    durationMinutes: integer("duration_minutes").notNull(),
+
+    refreshRating: integer("refresh_rating"),
+    notes: text("notes"),
+
+    loggedAt: timestamp("logged_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => ({
+    userNapDateIdx: index("sleep_naps_user_nap_date_idx").on(
+      table.userId,
+      table.napDate,
+    ),
+  }),
+);
+
+export const sleepSettings = pgTable(
+  "sleep_settings",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    targetSleepMinutes: integer("target_sleep_minutes").default(480).notNull(),
+    targetBedtime: text("target_bedtime"),
+    targetWakeTime: text("target_wake_time"),
+
+    bedtimeReminderEnabled: boolean("bedtime_reminder_enabled")
+      .default(false)
+      .notNull(),
+    bedtimeReminderTime: text("bedtime_reminder_time"),
+
+    windDownMinutes: integer("wind_down_minutes").default(30).notNull(),
+
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => ({
+    userUniqueSleepSettingsIdx: uniqueIndex(
+      "sleep_settings_user_unique_idx",
+    ).on(table.userId),
+  }),
+);
 
 // ── Physical Activity ─────────────────────────────────────
 export const activityLogs = pgTable("activity_logs", {
@@ -279,3 +372,8 @@ export const routineItems = pgTable("routine_items", {
   done: boolean("done").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+export type SleepLog = typeof sleepLogs.$inferSelect;
+export type SleepNap = typeof sleepNaps.$inferSelect;
+export type SleepSettings = typeof sleepSettings.$inferSelect;
+export type SleepOverview = ReturnType<typeof getSleepOverview>;

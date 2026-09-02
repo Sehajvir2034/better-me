@@ -306,7 +306,7 @@ export function DailyRitual({ amSteps, pmSteps }: Props) {
                 type="button"
                 onClick={() => setTab(t)}
                 className={cn(
-                  "rounded-full px-4 py-1.5 text-sm font-medium capitalize tracking-[0.12em] transition-all",
+                  "rounded-full px-4 py-1.5 text-sm font-medium capitalize tracking-[0.12em] transition-all cursor-pointer",
                   tab === t
                     ? "bg-[#2a2e42] text-[#FFFFE4] shadow-sm"
                     : "text-white/30 hover:text-white/50",
@@ -321,11 +321,11 @@ export function DailyRitual({ amSteps, pmSteps }: Props) {
         <div className="min-h-55 flex-1 space-y-0.5 overflow-y-auto px-1 py-2">
           {optimistic.length === 0 ? (
             <div className="flex flex-col items-center justify-center px-6 py-14 text-center">
-              <p className="font-satoshi text-sm text-white/25">
+              <p className="font-satoshi text-base font-semibold text-white/25">
                 No products in your {tab === "am" ? "morning" : "evening"}{" "}
                 routine yet.
               </p>
-              <p className="mt-1 text-sm text-white/15">
+              <p className="mt-1 text-base font-semibold text-white/15">
                 Use the button below to add your first step.
               </p>
             </div>

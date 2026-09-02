@@ -18,6 +18,7 @@ import {
   startOfYear,
   endOfYear,
   subMonths,
+  parseISO,
 } from "date-fns";
 import type { DateRange } from "react-day-picker";
 import {
@@ -83,11 +84,11 @@ export function WaterHistoryChart({ history, goal }: Props) {
     const toStr = format(activeRange.to, "yyyy-MM-dd");
 
     return [...history]
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime())
       .filter((d) => d.date >= fromStr && d.date <= toStr) // ← string comparison, no timezone issues
       .map((d) => ({
         ...d,
-        dateLabel: format(new Date(d.date + "T00:00:00"), "dd MMM"), // ← force local time
+        dateLabel: format(parseISO(d.date), "dd MMM"),
       }));
   }, [history, activeRange]);
 

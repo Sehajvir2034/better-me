@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Droplet } from "lucide-react";
 import { NumberTicker } from "@/components/ui/number-ticker";
+import { showPageTransition } from "@/components/layout/PageTransition";
 
 interface Props {
   data: { consumed: number; goal: number };
@@ -22,7 +23,7 @@ export function WaterCard({ data }: Props) {
         : "text-orange-400";
 
   return (
-    <Link href="/water">
+    <Link href="/water" onClick={() => showPageTransition()} className="block">
       <div className="group relative flex h-60 w-60 shrink-0 cursor-pointer flex-col justify-between overflow-hidden rounded-[2rem] bg-[#13151f] p-5 transition-all duration-300">
         <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-blue-600/8 to-transparent" />
 

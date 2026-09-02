@@ -44,7 +44,7 @@ export function WaterProgress({ consumed, goal }: Props) {
       </svg>
 
       <div className="relative flex items-center justify-center">
-        <AnimatedCircularProgressBar
+        {/* <AnimatedCircularProgressBar
           max={100}
           min={0}
           value={pct}
@@ -55,7 +55,16 @@ export function WaterProgress({ consumed, goal }: Props) {
 
         <span className="absolute ml-18 mt-2 text-xl font-bold text-[#FFFFE4]">
           %
-        </span>
+        </span> */}
+        <AnimatedCircularProgressBar
+          min={0}
+          max={100}
+          value={pct}
+          valueSuffix="%"
+          gaugePrimaryColor="url(#progress-gradient)"
+          gaugeSecondaryColor="rgba(255,255,255,0.08)"
+          className="size-60 text-4xl font-semibold text-[#FFFFE4]"
+        />
       </div>
 
       <div className="text-center">

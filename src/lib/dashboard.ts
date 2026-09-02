@@ -3,6 +3,7 @@ import {
   waterLogs,
   waterGoals,
   sleepLogs,
+  sleepSettings,
   activityLogs,
   nutritionLogs,
   vitaminLogs,
@@ -13,7 +14,8 @@ import {
   haircareLogs,
   journalEntries,
 } from "@/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, desc } from "drizzle-orm";
+import { getSleepDurationMinutes, getSleepOverview } from "@/lib/sleep";
 
 function today() {
   return new Date().toISOString().split("T")[0];
@@ -40,31 +42,60 @@ export async function getTodayWater(userId: string) {
 
 // ─── SLEEP ───────────────────────────────────────────────
 export async function getTodaySleep(userId: string) {
-  const row = await db
-    .select({
-      durationMinutes: sleepLogs.durationMinutes,
-      quality: sleepLogs.quality,
-    })
-    .from(sleepLogs)
-    .where(and(eq(sleepLogs.userId, userId), eq(sleepLogs.date, today())))
-    .limit(1);
+  const [latestRows, settingsRows, recentRows] = await Promise.all([
+    db
+      .select()
+      .from(sleepLogs)
+      .where(eq(sleepLogs.userId, userId))
+      .orderBy(desc(sleepLogs.sleepDate), desc(sleepLogs.loggedAt))
+      .limit(1),
 
-  const entry = row[0];
-  const hours = entry?.durationMinutes
-    ? Math.round((entry.durationMinutes / 60) * 10) / 10
-    : null;
+    db
+      .select()
+      .from(sleepSettings)
+      .where(eq(sleepSettings.userId, userId))
+      .limit(1),
 
-  const qualityMap: Record<number, string> = {
-    1: "poor",
-    2: "poor",
-    3: "fair",
-    4: "good",
-    5: "great",
-  };
+    db
+      .select()
+      .from(sleepLogs)
+      .where(eq(sleepLogs.userId, userId))
+      .orderBy(desc(sleepLogs.sleepDate), desc(sleepLogs.loggedAt))
+      .limit(7),
+  ]);
+
+  const latestLog = latestRows[0] ?? null;
+  const settings = settingsRows[0] ?? null;
+
+  if (!latestLog) {
+    return {
+      hours: null,
+      quality: null,
+      score: null,
+      durationMinutes: null,
+      status: null,
+    };
+  }
+
+  const overview = getSleepOverview(latestLog, settings, recentRows, []);
+  const hours = Math.round((overview.sleepDurationMinutes / 60) * 10) / 10;
 
   return {
     hours,
-    quality: entry?.quality ? (qualityMap[entry.quality] ?? null) : null,
+    quality: latestLog.sleepQuality
+      ? ((
+          {
+            1: "poor",
+            2: "poor",
+            3: "fair",
+            4: "good",
+            5: "great",
+          } as const
+        )[latestLog.sleepQuality] ?? null)
+      : null,
+    score: overview.score,
+    durationMinutes: overview.sleepDurationMinutes,
+    status: overview.status,
   };
 }
 
@@ -128,7 +159,6 @@ export async function getTodayVitamins(userId: string) {
   return { taken: takenToday.length, total: allVitamins.length };
 }
 
-// ─── SKINCARE ────────────────────────────────────────────
 // ─── SKINCARE ────────────────────────────────────────────
 export async function getTodaySkincare(userId: string) {
   const [ritualSteps, logs] = await Promise.all([
